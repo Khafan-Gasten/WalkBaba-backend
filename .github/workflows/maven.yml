@@ -30,8 +30,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: WalkBaba-app
-          path: '${{ github.workspace }}/target/*.jar'
-          
+          path: 'target/*.jar'
+#           ${{ github.workspace }}
 
   deploy:
     runs-on: ubuntu-latest
