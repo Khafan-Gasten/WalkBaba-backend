@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-    @GetMapping(path="/")
+    @GetMapping(path="/api")
     ResponseEntity<String> test() {
         return ResponseEntity.ok("KG if the best fucking mob");
     }
