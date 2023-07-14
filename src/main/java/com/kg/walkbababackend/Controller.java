@@ -11,6 +11,6 @@ public class Controller {
 
     @GetMapping
     public ResponseEntity<String> test() {
-        return ResponseEntity.ok("KG is the best fucking mob");
+        return ResponseEntity.ok("KG is the best fucking mob. Boo JP");
     }
 }
