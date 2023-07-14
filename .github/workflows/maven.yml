@@ -45,10 +45,10 @@ jobs:
         with:
           name: WalkBaba-app
           
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{secrets.AZURE_CREDS }}
+#       - name: Azure Login
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{secrets.AZURE_CREDS }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -56,5 +56,5 @@ jobs:
         with:
           app-name: 'WalkBaba-app'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_360ADE5CE36444FE9A09F2321F2B652B }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: '*.jar'
