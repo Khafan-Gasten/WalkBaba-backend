@@ -65,3 +65,7 @@ jobs:
           azcliversion: 2.30.0
           inlineScript: |
             az webapp restart --name WalkBaba --resource-group WalkBaba-ResourceGrp
+            
+      - name: logout
+        run: |
+          az logout
