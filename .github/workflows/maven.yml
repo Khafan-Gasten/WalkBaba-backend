@@ -44,6 +44,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: WalkBaba-app
+          
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_CREDS }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -53,8 +58,3 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_360ADE5CE36444FE9A09F2321F2B652B }}
           package: '*.jar'
-          
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{secrets.AZURE_CREDS }}
