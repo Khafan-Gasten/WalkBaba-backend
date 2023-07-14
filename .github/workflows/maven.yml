@@ -45,10 +45,10 @@ jobs:
         with:
           name: WalkBaba
           
-#       - name: Azure Login
-#         uses: azure/login@v1
-#         with:
-#           creds: ${{secrets.AZURE_CREDS }}
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{secrets.AZURE_WEBAPP }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -58,3 +58,10 @@ jobs:
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: '*.jar'
+          
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.30.0
+          inlineScript: |
+            az webapp restart --name WalkBaba --resource-group WalkBaba-ResourceGrp
