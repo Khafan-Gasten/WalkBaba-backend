@@ -64,4 +64,4 @@ jobs:
         with:
           azcliversion: 2.30.0
           inlineScript: |
-            az webapp restart --name kikkersANDmonstersB --resource-group finalProject
+            az webapp restart --name WalkBaba --resource-group WalkBaba-ResourceGrp
