@@ -16,10 +16,13 @@ public class Services {
     OpenAIService openAIService;
 
     public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO) {
-        String response =  openAIService.chat(String.format("give me 5 different %s hour walk route in %s" +
-                " Format: one json containing five results" +
-                " Json response contains : \"walk_name\", \"description\", \"exact_duration\", \"distance\", \"waypoints_names\"",
-        requestDTO.duration(), requestDTO.city()));
+        String response =  openAIService.chat(String.format(
+                "Give me 5 different walking routes in %s. " +
+                        "They should be around %s hour in length and visit some highlights." +
+                        " Calculate the exact duration in minutes of the route and " +
+                        "respond with one json object containing five routes " +
+                        "with the keys \"walk_name\", \"description\", \"duration\", \"distance, \"waypoints_names\""
+                , requestDTO.city(),requestDTO.duration()));
         List<OpenAIRouteDTO> openAIRouteDTOList = getListOfRoute(response) ;
         return  openAIRouteDTOList ;
     }

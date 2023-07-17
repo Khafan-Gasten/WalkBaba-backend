@@ -6,7 +6,7 @@ import java.util.List;
 
 public record OpenAIRouteDTO(@JsonProperty("walk_name") String name,
                              String description,
-                             @JsonProperty("exact_duration") String duration,
+                             @JsonProperty("duration") String duration,
                              String distance,
                              @JsonProperty("waypoints_names") List<String> waypoints ) {
 }

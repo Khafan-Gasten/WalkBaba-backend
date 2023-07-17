@@ -6,10 +6,7 @@ import com.kg.walkbababackend.service.OpenAIService;
 import com.kg.walkbababackend.service.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,17 +24,9 @@ public class Controller {
         return ResponseEntity.ok("KG is the best fucking mob. Boo JP");
     }
 
-    @GetMapping(value = "/openai")
+    @PostMapping(value = "/openai")
     public ResponseEntity<List<OpenAIRouteDTO>> getOpenAIResponse(@RequestBody UserRequestDTO requestDTO) {
 
         return ResponseEntity.ok(services.getOpenAIResponse(requestDTO));
-
-
-
-//        "Task:  Recommend 5 different  2 hour walking routes " +
-//                "and estimated duration between points\n" +
-//                "City: Rotterdam\n" +
-//                "Format: one json containing five results\n" +
-//                "Response Contain : walk name, description, duration, distance, waypoints names"));
     }
 }

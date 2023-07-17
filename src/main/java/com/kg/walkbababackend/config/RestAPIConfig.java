@@ -1,4 +1,4 @@
-package com.kg.walkbababackend;
+package com.kg.walkbababackend.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
