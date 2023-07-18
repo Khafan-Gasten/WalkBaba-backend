@@ -2,7 +2,6 @@ package com.kg.walkbababackend;
 
 import com.kg.walkbababackend.model.openai.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.UserRequestDTO;
-import com.kg.walkbababackend.service.OpenAIService;
 import com.kg.walkbababackend.service.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +15,6 @@ public class Controller {
 
     @Autowired
     Services services;
-
-
 
     @GetMapping
     public ResponseEntity<String> test() {

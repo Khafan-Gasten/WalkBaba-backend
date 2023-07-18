@@ -21,7 +21,7 @@ public class Services {
                         "They should be around %s hour in length and visit some highlights." +
                         " Calculate the exact duration in minutes of the route and " +
                         "respond with one json object containing five routes " +
-                        "with the keys \"walk_name\", \"description\", \"duration\", \"distance, \"waypoints_names\""
+                        "with the keys \"walk_name\", \"description\", \"duration\", \"distance, \"waypoints\""
                 , requestDTO.city(),requestDTO.duration()));
         List<OpenAIRouteDTO> openAIRouteDTOList = getListOfRoute(response) ;
         return  openAIRouteDTOList ;

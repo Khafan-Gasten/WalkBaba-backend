@@ -36,7 +36,6 @@ public class OpenAIService {
         }
 
         // return the first response
-//        return response.getChoices().get(0).getMessage().getContent();
         System.out.println(response.choices().get(0).messageDTO().content());
         return response.choices().get(0).messageDTO().content();
     }
