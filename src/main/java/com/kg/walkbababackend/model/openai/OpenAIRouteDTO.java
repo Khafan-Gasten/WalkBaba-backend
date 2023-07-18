@@ -8,5 +8,5 @@ public record OpenAIRouteDTO(@JsonProperty("walk_name") String name,
                              String description,
                              @JsonProperty("duration") String duration,
                              String distance,
-                             @JsonProperty("waypoints") List<String> waypoints ) {
+                             @JsonProperty("waypoint_names") List<String> waypoints ) {
 }
