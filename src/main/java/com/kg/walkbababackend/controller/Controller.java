@@ -1,4 +1,4 @@
-package com.kg.walkbababackend;
+package com.kg.walkbababackend.controller;
 
 import com.kg.walkbababackend.model.openai.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.UserRequestDTO;
