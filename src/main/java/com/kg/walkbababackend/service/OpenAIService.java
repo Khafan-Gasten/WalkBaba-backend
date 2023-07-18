@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.NoSuchElementException;
+
 @Service
 public class OpenAIService {
 
@@ -32,7 +34,7 @@ public class OpenAIService {
         OpenAIResponseDTO response = restTemplate.postForObject(apiUrl, request, OpenAIResponseDTO.class);
 
         if (response == null || response.choices() == null || response.choices().isEmpty()) {
-            return "No response";
+            throw new NoSuchElementException("No response from MaBoo BFF");
         }
 
         // return the first response

@@ -16,7 +16,7 @@ public class Services {
     @Autowired
     OpenAIService openAIService;
 
-    public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO) {
+    public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO)  {
         String response =  openAIService.chat(String.format(
                 "Give me 5 different walking routes in %s, %s. " +
                         "They should be around %s hour in length and visit some highlights." +
@@ -33,16 +33,17 @@ public class Services {
         return  openAIRouteDTOList ;
     }
 
-    public  List<OpenAIRouteDTO> getListOfRoute(String response)  {
-        response = response.substring(response.indexOf("["),response.lastIndexOf("]")+1) ;
-        ObjectMapper mapper = new ObjectMapper();
-        OpenAIRouteDTO[] routeDTOS = new OpenAIRouteDTO[0];
+    public  List<OpenAIRouteDTO> getListOfRoute(String response) {
         try {
-            routeDTOS = mapper.readValue(response, OpenAIRouteDTO[].class);
+            response = response.substring(response.indexOf("["),response.lastIndexOf("]")+1) ;
+            ObjectMapper mapper = new ObjectMapper();
+            OpenAIRouteDTO[] routeDTOS = mapper.readValue(response, OpenAIRouteDTO[].class);
+            return Arrays.asList(routeDTOS) ;
         } catch (JsonProcessingException e) {
-            System.out.println( e.getMessage());
+            throw new IllegalArgumentException("Not fit to OpenAIRouteDTO !!!");
+        } catch ( StringIndexOutOfBoundsException ex){
+            throw new IllegalArgumentException("Not contain list !!!");
         }
-        return Arrays.asList(routeDTOS) ;
 
     }
 }
