@@ -16,14 +16,14 @@ public class Controller {
     @Autowired
     Services services;
 
-    @GetMapping
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("KG is the best fucking mob. Boo JP");
-    }
-
     @PostMapping(value = "/openai")
     public ResponseEntity<List<OpenAIRouteDTO>> getOpenAIResponse(@RequestBody UserRequestDTO requestDTO) {
 
-        return ResponseEntity.ok(services.getOpenAIResponse(requestDTO));
+        return ResponseEntity.ok(services.getRoutes(requestDTO));
+    }
+
+    @GetMapping
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("KG is the best fucking mob. Boo JP");
     }
 }
