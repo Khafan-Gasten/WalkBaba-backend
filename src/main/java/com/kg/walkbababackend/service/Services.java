@@ -18,7 +18,7 @@ public class Services {
     public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO) {
         String response = openAIService.chat(String.format(
                 "Can you give me 5 walking tour routes with below details:\n" +
-                        "- in the city of %s, the %s\n" +
+                        "- in the city of %s, %s\n" +
                         "- contain highlights saved as waypoints\n" +
                         "- each waypoint should have a short description\n" +
                         "- the routes should be of varying lengths\n" +
