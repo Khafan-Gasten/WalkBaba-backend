@@ -22,13 +22,12 @@ public class Services {
 
     @Autowired
     RouteRepository repo;
-
-
     public List<OpenAIRouteDTO> getRoutes(UserRequestDTO requestDTO) {
-//        List<RouteInfo> routesFromDB = repo.getRoutesFromDB(requestDTO);
-//        if (routesFromDB != null) {
-//            return addCityAndCountryDetails(routesFromDB.stream().map(route -> new OpenAIRouteDTO(route)).toList(), requestDTO);
-//        }
+        List<RouteInfo> routesFromDB = repo.getRoutesFromDB(requestDTO);
+        System.out.println(routesFromDB);
+        if (routesFromDB.size() != 0) {
+            return addCityAndCountryDetails(routesFromDB.stream().map(route -> new OpenAIRouteDTO(route)).toList(), requestDTO);
+        }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
         repoService.saveRoute(routes, requestDTO);
         return addCityAndCountryDetails(routes, requestDTO);

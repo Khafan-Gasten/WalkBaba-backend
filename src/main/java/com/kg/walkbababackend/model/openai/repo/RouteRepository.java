@@ -21,6 +21,4 @@ public class RouteRepository{
     public List<RouteInfo> getRoutesFromDB(UserRequestDTO userRequest) {
         return repo.findByCityAndCountry(userRequest.city(), userRequest.country());
     }
-
-
 }
