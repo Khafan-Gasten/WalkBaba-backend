@@ -35,9 +35,9 @@ spring:
         dialect: org.hibernate.dialect.SQLServerDialect
 #server:
 #  port : 8081
-logging:
-  level:
-    org:
-      springframework:
-        boot:
-          autoconfigure: ERROR
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        boot:
+#          autoconfigure: ERROR
