@@ -1,7 +1,6 @@
-package com.kg.walkbababackend.model.openai.repo;
+package com.kg.walkbababackend.model.openai.Repo;
 
 import com.kg.walkbababackend.model.openai.DB.RouteInfo;
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

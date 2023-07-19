@@ -1,4 +1,4 @@
-package com.kg.walkbababackend.model.openai.repo;
+package com.kg.walkbababackend.model.openai.Repo;
 
 
 import com.kg.walkbababackend.model.openai.DB.RouteInfo;
