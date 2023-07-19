@@ -22,7 +22,7 @@ public class Services {
                         "- contain highlights saved as waypoints\n" +
                         "- each waypoint should have a short description\n" +
                         "- the routes should be of varying lengths\n" +
-                        "Give the response as a json object with keys of walk_name, description, waypoints. Waypoints should include the keys waypoint_name and description."
+                        "Give the response as a json object with keys of \"walk_name\", \"description\", \"waypoints\". \"waypoints\" should include the keys \"waypoint_name\" and \"description\"."
                 , requestDTO.city(), requestDTO.country()));
         List<OpenAIRouteDTO> openAIRouteDTOList = getListOfRoute(response);
 
