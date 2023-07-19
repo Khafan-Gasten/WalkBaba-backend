@@ -15,32 +15,32 @@ public class Services {
     @Autowired
     OpenAIService openAIService;
 
-    public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO)  {
-        String response =  openAIService.chat(String.format(
-                "Give me 5 different walking routes in %s, %s. " +
-                        "They should be around %s hour in length and visit some highlights." +
-                        " Calculate the exact duration in minutes of the route and " +
-                        "respond with one json object containing five routes " +
-                        "with the keys \"walk_name\", \"description\", \"duration\", \"distance\", \"waypoint_names\""
-                , requestDTO.city(), requestDTO.country(), requestDTO.duration()));
-        List<OpenAIRouteDTO> openAIRouteDTOList = getListOfRoute(response) ;
+    public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO) {
+        String response = openAIService.chat(String.format(
+                "Can you give me 5 walking tour routes with below details:\n" +
+                        "- in the city of %s, the %s\n" +
+                        "- contain highlights saved as waypoints\n" +
+                        "- each waypoint should have a short description\n" +
+                        "- the routes should be of varying lengths\n" +
+                        "Give the response as a json object with keys of walk_name, description, waypoints. Waypoints should include the keys waypoint_name and description."
+                , requestDTO.city(), requestDTO.country()));
+        List<OpenAIRouteDTO> openAIRouteDTOList = getListOfRoute(response);
 
         openAIRouteDTOList.forEach(route -> route.waypoints()
-                .replaceAll(waypoint -> String.format("%s, %s, %s",waypoint,requestDTO.city(),requestDTO.country())
-                )
-        );
-        return  openAIRouteDTOList ;
+                .forEach(waypoint ->
+                waypoint.withName(waypoint.name(), requestDTO.city(), requestDTO.country())));
+        return openAIRouteDTOList;
     }
 
-    public  List<OpenAIRouteDTO> getListOfRoute(String response) {
+    public List<OpenAIRouteDTO> getListOfRoute(String response) {
         try {
-            response = response.substring(response.indexOf("["),response.lastIndexOf("]")+1) ;
+            response = response.substring(response.indexOf("["), response.lastIndexOf("]") + 1);
             ObjectMapper mapper = new ObjectMapper();
             OpenAIRouteDTO[] routeDTOS = mapper.readValue(response, OpenAIRouteDTO[].class);
-            return Arrays.asList(routeDTOS) ;
+            return Arrays.asList(routeDTOS);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Not fit to OpenAIRouteDTO !!!");
-        } catch (StringIndexOutOfBoundsException ex){
+        } catch (StringIndexOutOfBoundsException ex) {
             throw new IllegalArgumentException("Not contain list !!!");
         }
 

@@ -11,7 +11,7 @@ public class RouteInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long routeId;
     private String city;
     private String country;
     private String title;
