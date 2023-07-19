@@ -2,14 +2,13 @@ package com.kg.walkbababackend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kg.walkbababackend.model.openai.OpenAIRouteDTO;
-import com.kg.walkbababackend.model.openai.UserRequestDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class Services {
@@ -41,7 +40,7 @@ public class Services {
             return Arrays.asList(routeDTOS) ;
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Not fit to OpenAIRouteDTO !!!");
-        } catch ( StringIndexOutOfBoundsException ex){
+        } catch (StringIndexOutOfBoundsException ex){
             throw new IllegalArgumentException("Not contain list !!!");
         }
 

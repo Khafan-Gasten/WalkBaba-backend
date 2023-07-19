@@ -1,7 +1,7 @@
 package com.kg.walkbababackend.controller;
 
-import com.kg.walkbababackend.model.openai.OpenAIRouteDTO;
-import com.kg.walkbababackend.model.openai.UserRequestDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import com.kg.walkbababackend.service.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

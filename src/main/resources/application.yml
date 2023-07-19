@@ -3,3 +3,41 @@ openai:
   api :
     url: https://api.openai.com/v1/chat/completions
     key: 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
+
+debug: true
+spring:
+  #  sql:
+  #    init:
+  #      platform: sqlserver
+  #  output:
+  #    ansi:
+  #      enabled: always
+  datasource:
+    url: jdbc:sqlserver://walk-baba-db.database.windows.net:1433;database=WalkBabaDB;user=KG@walk-baba-db;password={RN!#9Nxe8P3z-Cn};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    #databaseName: CanineDB2
+#    username: CloudSAdc9ad0cc@canine-server-kg
+#    password: Test1234!
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#    #    encrypt: true
+#    trustServerCertificate: false
+#    hostNameInCertificate: '*.database.windows.net'
+#    loginTimeout: 30
+  #    hikari:
+  #      connectionTimeout: 20000
+  #      maximumPoolSize: 5
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    #    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.SQLServerDialect
+server:
+  port : 8081
+logging:
+  level:
+    org:
+      springframework:
+        boot:
+          autoconfigure: ERROR

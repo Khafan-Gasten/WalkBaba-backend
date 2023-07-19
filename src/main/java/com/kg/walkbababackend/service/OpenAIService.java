@@ -1,14 +1,11 @@
 package com.kg.walkbababackend.service;
 
-import com.kg.walkbababackend.model.openai.OpenAIMessageDTO;
-import com.kg.walkbababackend.model.openai.OpenAIRequestDTO;
-import com.kg.walkbababackend.model.openai.OpenAIResponseDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAIRequestDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAIResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.NoSuchElementException;

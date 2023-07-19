@@ -1,7 +1,8 @@
-package com.kg.walkbababackend.model.openai;
+package com.kg.walkbababackend.model.openai.DTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kg.walkbababackend.model.openai.DTO.OpenAIMessageDTO;
 
 import java.util.ArrayList;
 import java.util.List;
