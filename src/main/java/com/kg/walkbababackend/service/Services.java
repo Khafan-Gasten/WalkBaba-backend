@@ -24,10 +24,11 @@ public class Services {
     RouteRepository repo;
     public List<OpenAIRouteDTO> getRoutes(UserRequestDTO requestDTO) {
         List<RouteInfo> routesFromDB = repo.getRoutesFromDB(requestDTO);
-        System.out.println(routesFromDB);
         if (routesFromDB.size() != 0) {
+            System.out.println("Did it from DB");
             return addCityAndCountryDetails(routesFromDB.stream().map(route -> new OpenAIRouteDTO(route)).toList(), requestDTO);
         }
+        System.out.println("Did it for GPT");
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
         repoService.saveRoute(routes, requestDTO);
         return addCityAndCountryDetails(routes, requestDTO);
