@@ -30,7 +30,7 @@ public class Services {
 //            return addCityAndCountryDetails(routesFromDB.stream().map(route -> new OpenAIRouteDTO(route)).toList(), requestDTO);
 //        }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
-//        repoService.saveRoute(routes, requestDTO);
+        repoService.saveRoute(routes, requestDTO);
         return addCityAndCountryDetails(routes, requestDTO);
     }
 
