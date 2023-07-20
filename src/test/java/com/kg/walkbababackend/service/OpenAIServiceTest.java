@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+//@SpringBootTest
 class OpenAIServiceTest {
 
     private static final String BRISTOL_CHAT_GPT_RESPONSE = """
@@ -73,16 +73,8 @@ class OpenAIServiceTest {
           ]
         }
             """;
-    @Autowired
-    OpenAIService openAIService;
 
-//    List<OpenAIRouteDTO> getListOfCorrectRoutes = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
-
-//    @BeforeAll
-//    public void assignValue(){
-//        getListOfCorrectRoutes = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
-//    }
-//
+    OpenAIService openAIService = new OpenAIService();
     @Test
     public void getListOfRouteShouldReturnCorrectRouteList() {
         List<OpenAIRouteDTO> getListOfCorrectRoutes = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
@@ -99,7 +91,29 @@ class OpenAIServiceTest {
         assertEquals( "A museum dedicated to the history and culture of Bristol" , getListOfCorrectRoutes.get(1).waypoints().get(1).description());
     }
 
+    @Test
+    public void getListOfRouteThrowsExceptionForBadJSONFormat() {
+        String badJsonResponse = replaceLast(BRISTOL_CHAT_GPT_RESPONSE, "[{]",  "");
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> openAIService.getListOfRoute(badJsonResponse));
+        assertEquals("Json for chatGPT incorrect format for OpenAIRouteDTO!!!", ex.getMessage());
+    }
 
+    @Test
+    public void getListOfRouteThrowsExceptionForIncorrectKey() {
+        String badJsonResponse = BRISTOL_CHAT_GPT_RESPONSE.replace("waypoint_name", "waypoints_name");
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> openAIService.getListOfRoute(badJsonResponse));
+        assertEquals("Json for chatGPT incorrect format for OpenAIRouteDTO!!!", ex.getMessage());
+    }
 
+    @Test
+    public void getListOfRouteThrowsExceptionForNoJson(){
+        String badJsonResponse = " this is test for {}" ;
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class, () -> openAIService.getListOfRoute(badJsonResponse));
+        assertEquals("ChatGPT response is not a list list!!!", ex.getMessage());
+    }
 
+    public String replaceLast(String text, String regex, String replacement) {
+        return text.replaceFirst("(?s)(.*)" + regex, "$1" + replacement);
+    }
 }

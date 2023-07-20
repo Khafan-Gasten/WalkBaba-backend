@@ -52,9 +52,9 @@ public class OpenAIService {
             OpenAIRouteDTO[] routeDTOS = mapper.readValue(response, OpenAIRouteDTO[].class);
             return Arrays.asList(routeDTOS);
         } catch (JsonProcessingException e) {
-            throw new IllegalArgumentException("Not fit to OpenAIRouteDTO !!!");
+            throw new IllegalArgumentException("Json for chatGPT incorrect format for OpenAIRouteDTO!!!");
         } catch (StringIndexOutOfBoundsException ex) {
-            throw new IllegalArgumentException("Not contain list !!!");
+            throw new IllegalArgumentException("ChatGPT response is not a list list!!!");
         }
     }
 
