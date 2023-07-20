@@ -45,6 +45,7 @@ public class OpenAIService {
 
     public List<OpenAIRouteDTO> getListOfRoute(String response) {
         try {
+            System.out.println(response);
             response = response.substring(response.indexOf("["), response.lastIndexOf("]") + 1);
             System.out.println("Maboo's bullshit\n"+response);
             ObjectMapper mapper = new ObjectMapper();
