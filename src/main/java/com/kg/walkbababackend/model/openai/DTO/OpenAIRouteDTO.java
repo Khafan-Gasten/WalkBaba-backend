@@ -5,6 +5,7 @@ import com.kg.walkbababackend.model.openai.DB.RouteInfo;
 import com.kg.walkbababackend.model.openai.DB.WaypointInfo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record OpenAIRouteDTO(@JsonProperty("walk_name") String name,
                              String description,
@@ -13,6 +14,7 @@ public record OpenAIRouteDTO(@JsonProperty("walk_name") String name,
         this(routeInfo.getRouteName(),
                 routeInfo.getRouteDescription(),
                 routeInfo.getWaypoints().stream()
-                        .map(waypoint -> new WaypointDTO(waypoint)).toList());
+                        .map(waypoint -> new WaypointDTO(waypoint))
+                        .collect(Collectors.toList()));
     }
 }

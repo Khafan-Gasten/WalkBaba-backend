@@ -25,9 +25,10 @@ public class Services {
     public List<OpenAIRouteDTO> getRoutes(UserRequestDTO requestDTO) {
         List<RouteInfo> routesFromDB = repo.getRoutesFromDB(requestDTO);
         if (routesFromDB.size() != 0) {
-            List<OpenAIRouteDTO> routesReformat = routesFromDB.stream().map(OpenAIRouteDTO::new).toList();
-            return routesReformat;
-//            return addCityAndCountryDetails(routesReformat, requestDTO);
+            List<OpenAIRouteDTO> routesReformat = routesFromDB.stream()
+                    .map(OpenAIRouteDTO::new)
+                    .collect(Collectors.toList());
+            return addCityAndCountryDetails(routesReformat, requestDTO);
         }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
         repoService.saveRoute(routes, requestDTO);
