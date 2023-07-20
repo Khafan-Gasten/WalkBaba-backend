@@ -33,16 +33,6 @@ public class RouteInfo {
                 .toList();
     }
 
-    public RouteInfo clone(){
-        RouteInfo p = new RouteInfo();
-        p.routeId = this.routeId;
-        p.city = this.city;
-        p.country = this.country;
-        p.routeName = this.routeName;
-        p.routeDescription = this.routeDescription;
-        p.waypoints = this.waypoints;
-        return p;
-    }
 
     public RouteInfo() {
 

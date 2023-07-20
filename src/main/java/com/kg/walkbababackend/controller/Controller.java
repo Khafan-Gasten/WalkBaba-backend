@@ -18,7 +18,6 @@ public class Controller {
 
     @PostMapping(value = "/openai")
     public ResponseEntity<List<OpenAIRouteDTO>> getOpenAIResponse(@RequestBody UserRequestDTO requestDTO) {
-
         return ResponseEntity.ok(services.getRoutes(requestDTO));
     }
 

@@ -24,21 +24,11 @@ public class Services {
     RouteRepository repo;
     public List<OpenAIRouteDTO> getRoutes(UserRequestDTO requestDTO) {
         List<RouteInfo> routesFromDB = repo.getRoutesFromDB(requestDTO);
-        //Is the list from the database immutable?
         if (routesFromDB.size() != 0) {
-            ArrayList<RouteInfo> cloneDB = new ArrayList<>();
-            for(RouteInfo route: routesFromDB) {
-                cloneDB.add(route.clone());
-            }
-//            System.out.println("Did it from DB");
-//            routesFromDB.forEach(route -> System.out.println(route.getRouteName()));
-            OpenAIRouteDTO[] routesReformat = cloneDB.stream().map(OpenAIRouteDTO::new).toArray(OpenAIRouteDTO[]::new);
-            System.out.println(routesReformat.toString());
-            ArrayList<OpenAIRouteDTO> routesMoreReformat = new ArrayList<OpenAIRouteDTO>(Arrays.asList(routesReformat));
-            return routesMoreReformat;
-//            return addCityAndCountryDetails(routesMoreReformat, requestDTO);
+            List<OpenAIRouteDTO> routesReformat = routesFromDB.stream().map(OpenAIRouteDTO::new).toList();
+            return routesReformat;
+//            return addCityAndCountryDetails(routesReformat, requestDTO);
         }
-        System.out.println("Did it from GPT");
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
         repoService.saveRoute(routes, requestDTO);
         return addCityAndCountryDetails(routes, requestDTO);
