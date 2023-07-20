@@ -16,12 +16,8 @@ public class RepositoryService {
     RouteRepository repo;
     public List<RouteInfo> saveRoute(List<OpenAIRouteDTO> routes, UserRequestDTO userRequest) {
         return routes.stream()
-                .map(route -> convertToEntity(route, userRequest))
+                .map(route -> new RouteInfo(userRequest, route))
                 .map(route -> repo.saveRoute(route))
                 .toList();
-    }
-
-    public RouteInfo convertToEntity(OpenAIRouteDTO route, UserRequestDTO userRequest) {
-        return new RouteInfo(userRequest, route);
     }
 }
