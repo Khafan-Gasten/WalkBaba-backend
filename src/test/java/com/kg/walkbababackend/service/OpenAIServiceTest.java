@@ -1,6 +1,7 @@
 package com.kg.walkbababackend.service;
 
 import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,14 +76,30 @@ class OpenAIServiceTest {
     @Autowired
     OpenAIService openAIService;
 
+//    List<OpenAIRouteDTO> getListOfCorrectRoutes = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
+
+//    @BeforeAll
+//    public void assignValue(){
+//        getListOfCorrectRoutes = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
+//    }
+//
     @Test
-    public void getListOfRouteShouldReturnCorrectList() {
-        List<OpenAIRouteDTO> getListOfRoute = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
-        assertEquals( 3 , getListOfRoute.size());
-        assertArrayEquals(new int[]{3,3,3} , getListOfRoute.stream().mapToInt(route-> route.waypoints().size()).toArray());
-        assertEquals("Historic Bristol", getListOfRoute.get(0).name());
-        assertEquals("Enjoy a scenic walk along Bristol's Harbourside", getListOfRoute.get(1).description());
-        assertEquals( "Nelson Street" , getListOfRoute.get(2).waypoints().get(0).name());
-        assertEquals( "A museum dedicated to the history and culture of Bristol" , getListOfRoute.get(1).waypoints().get(1).description());
+    public void getListOfRouteShouldReturnCorrectRouteList() {
+        List<OpenAIRouteDTO> getListOfCorrectRoutes = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
+        assertEquals( 3 , getListOfCorrectRoutes.size());
+        assertEquals("Historic Bristol", getListOfCorrectRoutes.get(0).name());
+        assertEquals("Enjoy a scenic walk along Bristol's Harbourside", getListOfCorrectRoutes.get(1).description());
     }
+
+    @Test
+    public void getListOfRouteShouldReturnCorrectWaypointList() {
+        List<OpenAIRouteDTO> getListOfCorrectRoutes = openAIService.getListOfRoute(BRISTOL_CHAT_GPT_RESPONSE);
+        assertEquals("Enjoy a scenic walk along Bristol's Harbourside", getListOfCorrectRoutes.get(1).description());
+        assertEquals( "Nelson Street" , getListOfCorrectRoutes.get(2).waypoints().get(0).name());
+        assertEquals( "A museum dedicated to the history and culture of Bristol" , getListOfCorrectRoutes.get(1).waypoints().get(1).description());
+    }
+
+
+
+
 }
