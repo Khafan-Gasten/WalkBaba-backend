@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface JpaRouteRepository extends JpaRepository<RouteInfo, Long> {
     List<RouteInfo> findByCityAndCountry(String city, String country);
+
+
 }
