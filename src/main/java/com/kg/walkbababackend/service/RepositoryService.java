@@ -20,4 +20,8 @@ public class RepositoryService {
                 .map(route -> repo.saveRoute(route))
                 .toList();
     }
+
+    public List<RouteInfo> getRoutesFromDB(UserRequestDTO requestDTO) {
+        return repo.getRoutesFromDB(requestDTO);
+    }
 }

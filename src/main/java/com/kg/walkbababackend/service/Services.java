@@ -20,11 +20,9 @@ public class Services {
     @Autowired
     RepositoryService repoService;
 
-    @Autowired
-    RouteRepository repo;
     public List<OpenAIRouteDTO> getRoutes(UserRequestDTO requestDTO) {
-        List<RouteInfo> routesFromDB = repo.getRoutesFromDB(requestDTO);
-        if (routesFromDB.size() != 0) {
+        List<RouteInfo> routesFromDB = repoService.getRoutesFromDB(requestDTO);
+        if (!routesFromDB.isEmpty()) {
             List<OpenAIRouteDTO> routesReformat = routesFromDB.stream()
                     .map(OpenAIRouteDTO::new)
                     .collect(Collectors.toList());
