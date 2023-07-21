@@ -29,6 +29,8 @@ public class Services {
             return addCityAndCountryDetails(routesReformat, requestDTO);
         }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
+        //Call maps api to validate routes from chatGPT - add distance and time.
+        //Call unsplash or (google maps image api?) to add images to the routes (all the waypoints and the route).
         repoService.saveRoute(routes, requestDTO);
         return addCityAndCountryDetails(routes, requestDTO);
     }

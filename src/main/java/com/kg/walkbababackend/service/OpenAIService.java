@@ -52,12 +52,14 @@ public class OpenAIService {
             OpenAIRouteDTO[] routeDTOS = mapper.readValue(response, OpenAIRouteDTO[].class);
             return Arrays.asList(routeDTOS);
         } catch (JsonProcessingException e) {
+            //Could we catch this and send it back to chatGPT and ask it to put it in Json format - how do you keep the conversion.
             throw new IllegalArgumentException("Json for chatGPT incorrect format for OpenAIRouteDTO!!!");
         } catch (StringIndexOutOfBoundsException ex) {
             throw new IllegalArgumentException("ChatGPT response is not a list list!!!");
         }
     }
 
+    //We can test this!! Just check that the api is responding then check for regex
     public String chat(String prompt) {
         // create a request
         OpenAIRequestDTO request = new OpenAIRequestDTO(model, prompt);
