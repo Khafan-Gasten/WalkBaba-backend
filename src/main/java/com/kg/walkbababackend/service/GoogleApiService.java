@@ -30,13 +30,13 @@ public class GoogleApiService {
                 .map(route -> getOneRoute(route, requestDTO))
                 .filter(this::checkIfRouteIsValid)
                 .toList();
-
-//        OpenAIResponseDTO response = restTemplate.getForObject(requestUrl, OpenAIResponseDTO.class);
     }
 
     public boolean checkIfRouteIsValid(DirectionsResponseDTO directionsResponseDTO) {
-        int totalDistance = directionsResponseDTO.routes().get(0).legs.stream().mapToInt(leg -> leg.distance.value).sum();
-        int totalDuration = directionsResponseDTO.routes().get(0).legs.stream().mapToInt(leg -> leg.duration.value).sum();
+        int totalDistance = directionsResponseDTO.routes().get(0).legs.stream()
+                .mapToInt(leg -> leg.distance.value).sum();
+        int totalDuration = directionsResponseDTO.routes().get(0).legs.stream()
+                .mapToInt(leg -> leg.duration.value).sum();
         System.out.println("duration " + totalDuration + " distance " + totalDistance);
         return totalDuration <= 18000 && totalDuration >= 1200 && totalDistance <= 12000 && totalDistance >= 1000;
     }
@@ -87,11 +87,5 @@ public class GoogleApiService {
         }
         String pointWithSpaces = "%7Cvia%3A" + point + "%2C" + requestDTO.city() + "%2C" + requestDTO.country();
         return pointWithSpaces.replaceAll("[\s']", "%20");
-
-//        if (isWaypoint == false) {
-//            return point + ", " + requestDTO.city() + ", " + requestDTO.country();
-//        }
-//        return "|via:" + point + " " + requestDTO.city() + " " + requestDTO.country();
    }
-
 }
