@@ -7,6 +7,7 @@ import com.kg.walkbababackend.model.openai.DTO.OpenAi.WaypointDTO;
 import com.kg.walkbababackend.model.openai.DTO.directionsApi.DirectionsResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,9 +22,14 @@ public class GoogleApiService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final static String GOOGLE_MAPS_API_KEY = "AIzaSyBmOpstO2144GQzwOWrWL9NQLvQ5oyE_kw";
+    @Value("${googleMap.api.key}")
+    String GOOGLE_MAPS_API_KEY ;
 
-    private final static String GOOGLE_API_URL_BASE = "https://maps.googleapis.com/maps/api/directions/json?";
+    @Value("${googleMap.api.url}")
+    String GOOGLE_API_URL_BASE ;
+
+    @Value("${googleMap.imageMaxWidth}")
+    Long imageMaxWidth;
 
     public List<DirectionsResponseDTO> getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
         return routes.stream()
@@ -71,6 +77,7 @@ public class GoogleApiService {
         String mode = "walking";
 
         String requestUrl = GOOGLE_API_URL_BASE +
+                "/directions/json?" +
                 "origin=" + origin +
                 "&destination=" + destination +
                 "&optimize=" + optimize +
@@ -88,4 +95,20 @@ public class GoogleApiService {
         String pointWithSpaces = "%7Cvia%3A" + point + "%2C" + requestDTO.city() + "%2C" + requestDTO.country();
         return pointWithSpaces.replaceAll("[\s']", "%20");
    }
+
+    public List<String> getPlaceImageUrl(String placeId){
+        String requestUrl = String.format("%s/place/details/json" +
+                "?fields=photos" +
+                "&place_id=%s" +
+                "&key=%s",GOOGLE_API_URL_BASE,placeId, GOOGLE_MAPS_API_KEY) ;
+        GMapResponseDTO responseDTO = restTemplate.getForObject(requestUrl, GMapResponseDTO.class);
+        return responseDTO.result().photos()
+                .stream()
+                .limit(5)
+                .map(photo -> String.format("%s/place/photo" +
+                        "?maxwidth=%d" +
+                        "&photo_reference=%s" +
+                        "&key=%s",GOOGLE_API_URL_BASE,  imageMaxWidth, photo.photoReference(), GOOGLE_MAPS_API_KEY)).toList();
+
+    }
 }

@@ -49,4 +49,11 @@ class GoogleApiServiceTest {
         System.out.println(directionsResponseDTO.geocodedWaypointList());
         assertNotNull(directionsResponseDTO);
     }
+
+    @Test
+    public void getPlaceImageUrlShouldReturnCorrectUrl(){
+        List<String> actual = googleApiService.getPlaceImageUrl("ChIJN1t_tDeuEmsRUsoyG83frY4");
+        assertNotNull(actual);
+        assertTrue(actual.size() > 0);
+    }
 }

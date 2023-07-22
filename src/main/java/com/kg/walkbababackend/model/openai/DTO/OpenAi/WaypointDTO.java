@@ -16,8 +16,5 @@ public record WaypointDTO(@JsonProperty("waypoint_name") String name, String des
         this(waypoint.getWaypointName(), waypoint.getWaypointDescription() , waypoint.getImageLink());
     }
 
-    public WaypointDTO(@JsonProperty("waypoint_name") String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+
 }
