@@ -34,7 +34,7 @@ public class Services {
         RouteToFrontEndDTO routeToFrontEndDTO = new RouteToFrontEndDTO(routes, routesToRender);
         //Call unsplash or (google maps image api?) to add images to the routes (all the waypoints and the route).
         //repoService.saveRoute(routes, requestDTO);
-        return routes;
+        return addCityAndCountryDetails(routes, requestDTO);
     }
 
     public List<OpenAIRouteDTO> addCityAndCountryDetails(List<OpenAIRouteDTO> openAIRouteDTOList, UserRequestDTO requestDTO) {

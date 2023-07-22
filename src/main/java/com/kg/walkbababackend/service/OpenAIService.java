@@ -35,7 +35,7 @@ public class OpenAIService {
                  "- contain highlights saved as waypoints\n" +
                  "- each waypoint should have a short description\n" +
                  "- the routes should be of varying lengths\n" +
-                 "- the response should be in these 6 theme : Nature, Architecture, Food,Culture, Top Highlights, Family fun\n" +
+                 "- the response should be in these 6 theme : Nature, Architecture, Food, Culture, Top Highlights, Family fun\n" +
                  "-  recommend as much as you can\n" +
                  "- Give the response as one Json object. It should have  \"walk_name\",\"city\",\"country\", \"description\", \"waypoints\", " +
                  "\"theme\", \"waypoints\" as key and \"waypoints\" should include the keys \"waypoint_name\" and \"description\"." +
