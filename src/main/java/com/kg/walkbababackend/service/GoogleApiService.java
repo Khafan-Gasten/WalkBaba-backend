@@ -35,7 +35,10 @@ public class GoogleApiService {
     }
 
     public boolean checkIfRouteIsValid(DirectionsResponseDTO directionsResponseDTO) {
-        return true;
+        int totalDistance = directionsResponseDTO.routes().get(0).legs.stream().mapToInt(leg -> leg.distance.value).sum();
+        int totalDuration = directionsResponseDTO.routes().get(0).legs.stream().mapToInt(leg -> leg.duration.value).sum();
+
+        return totalDuration <= 18000 && totalDuration >= 1200 && totalDistance <= 12000 && totalDistance >= 1000;
     }
 
     public DirectionsResponseDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
