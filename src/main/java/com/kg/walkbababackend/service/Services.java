@@ -1,14 +1,12 @@
 package com.kg.walkbababackend.service;
 
 import com.kg.walkbababackend.model.openai.DB.RouteInfo;
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.RouteToFrontEndDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
-import com.kg.walkbababackend.model.openai.Repo.RouteRepository;
+import com.kg.walkbababackend.model.openai.DTO.directionsApi.DirectionsResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +14,9 @@ import java.util.stream.Collectors;
 public class Services {
     @Autowired
     OpenAIService openAIService;
+
+    @Autowired
+    GoogleApiService googleApiService;
 
     @Autowired
     RepositoryService repoService;
@@ -29,8 +30,11 @@ public class Services {
             return addCityAndCountryDetails(routesReformat, requestDTO);
         }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
-        repoService.saveRoute(routes, requestDTO);
-        return addCityAndCountryDetails(routes, requestDTO);
+        List<DirectionsResponseDTO> routesToRender = googleApiService.getRoutesToRender(routes, requestDTO);
+        RouteToFrontEndDTO routeToFrontEndDTO = new RouteToFrontEndDTO(routes, routesToRender);
+        //Call unsplash or (google maps image api?) to add images to the routes (all the waypoints and the route).
+        //repoService.saveRoute(routes, requestDTO);
+        return routes;
     }
 
     public List<OpenAIRouteDTO> addCityAndCountryDetails(List<OpenAIRouteDTO> openAIRouteDTOList, UserRequestDTO requestDTO) {
