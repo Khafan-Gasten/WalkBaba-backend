@@ -33,6 +33,4 @@ class GoogleApiServiceTest {
         assert(url.length() > 0);
         assertEquals(EDINBURGH_RESPONSE_URL, url);
     }
-
-
 }

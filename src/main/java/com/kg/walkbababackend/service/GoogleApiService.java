@@ -1,10 +1,7 @@
 package com.kg.walkbababackend.service;
 
 
-import com.kg.walkbababackend.model.openai.DTO.OpenAIResponseDTO;
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
-import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
-import com.kg.walkbababackend.model.openai.DTO.WaypointDTO;
+import com.kg.walkbababackend.model.openai.DTO.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -22,15 +19,21 @@ public class GoogleApiService {
 
     private final static String GOOGLE_API_URL_BASE = "https://maps.googleapis.com/maps/api/directions/json?";
 
-    public String getRoutesToRender(OpenAIRouteDTO routes, UserRequestDTO requestDTO) {
+    public String getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
 
         return "Implement this boi";
 
 //        OpenAIResponseDTO response = restTemplate.getForObject(requestUrl, OpenAIResponseDTO.class);
     }
 
-    public String directionApiUrlRequestBuilder(OpenAIRouteDTO routes, UserRequestDTO requestDTO) {
-        List<WaypointDTO> waypointsDTOList = routes.waypoints();
+    public String getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
+        String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
+        DirectionsResponseDTO response = restTemplate.getForObject(requestUrl, DirectionsResponseDTO.class);
+        return "This boi is close";
+    }
+
+    public String directionApiUrlRequestBuilder(OpenAIRouteDTO route, UserRequestDTO requestDTO) {
+        List<WaypointDTO> waypointsDTOList = route.waypoints();
         List<String> waypointsList = new ArrayList<>();
 
         for (int i = 0; i < waypointsDTOList.size(); i++) {
