@@ -4,8 +4,6 @@ import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import com.kg.walkbababackend.model.openai.DTO.WaypointDTO;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,11 +25,13 @@ class GoogleApiServiceTest {
 
     UserRequestDTO requestDTO = new UserRequestDTO("UK", "Edinburgh", "1", "Food", false);
 
+    private static final String EDINBURGH_RESPONSE_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=Edinburgh%20Castle%2C%20Edinburgh%2C%20UK&destination=Palace%20of%20Holyroodhouse%2C%20Edinburgh%2C%20UK&optimize=true&mode=walking&waypoints=via%3ARoyal%20Mile%2CEdinburgh%2CUK%7Cvia%3ASt.%20Giles%20%20Cathedral%2CEdinburgh%2CUK&key=AIzaSyBmOpstO2144GQzwOWrWL9NQLvQ5oyE_kw";
     @Test
     public void returnsCorrectUrlFormat() {
-        String url = googleApiService.getRoutesToRender(route, requestDTO);
+        String url = googleApiService.directionApiUrlRequestBuilder(route, requestDTO);
         System.out.println(url);
         assert(url.length() > 0);
+        assertEquals(EDINBURGH_RESPONSE_URL, url);
     }
 
 

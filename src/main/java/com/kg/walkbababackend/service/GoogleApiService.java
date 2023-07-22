@@ -24,8 +24,13 @@ public class GoogleApiService {
 
     public String getRoutesToRender(OpenAIRouteDTO routes, UserRequestDTO requestDTO) {
 
-        List<WaypointDTO> waypointsDTOList = routes.waypoints();
+        return "Implement this boi";
 
+//        OpenAIResponseDTO response = restTemplate.getForObject(requestUrl, OpenAIResponseDTO.class);
+    }
+
+    public String directionApiUrlRequestBuilder(OpenAIRouteDTO routes, UserRequestDTO requestDTO) {
+        List<WaypointDTO> waypointsDTOList = routes.waypoints();
         List<String> waypointsList = new ArrayList<>();
 
         for (int i = 0; i < waypointsDTOList.size(); i++) {
@@ -43,7 +48,6 @@ public class GoogleApiService {
         String waypoints = waypointsJoined.replaceFirst("%7C", "");
 
         String optimize = "true";
-
         String mode = "walking";
 
         String requestUrl = GOOGLE_API_URL_BASE +
@@ -55,8 +59,6 @@ public class GoogleApiService {
                 "&key=" + GOOGLE_MAPS_API_KEY;
 
         return requestUrl;
-
-//        OpenAIResponseDTO response = restTemplate.getForObject(requestUrl, OpenAIResponseDTO.class);
     }
 
     public String addCityAndCountryDetails(String point, UserRequestDTO requestDTO, Boolean isWaypoint) {
