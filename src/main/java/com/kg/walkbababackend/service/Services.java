@@ -3,6 +3,7 @@ package com.kg.walkbababackend.service;
 import com.kg.walkbababackend.model.openai.DB.RouteInfo;
 import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
+import com.kg.walkbababackend.model.openai.DTO.directionsApi.DirectionsResponseDTO;
 import com.kg.walkbababackend.model.openai.Repo.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class Services {
             return addCityAndCountryDetails(routesReformat, requestDTO);
         }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
-        String routesToRender = googleApiService.getRoutesToRender(routes, requestDTO);
+        List<DirectionsResponseDTO> routesToRender = googleApiService.getRoutesToRender(routes, requestDTO);
         //Call maps api to validate routes from chatGPT - add distance and time.
         //Call unsplash or (google maps image api?) to add images to the routes (all the waypoints and the route).
         repoService.saveRoute(routes, requestDTO);
