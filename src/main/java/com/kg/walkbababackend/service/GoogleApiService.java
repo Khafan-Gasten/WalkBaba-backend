@@ -29,7 +29,7 @@ public class GoogleApiService {
 //        OpenAIResponseDTO response = restTemplate.getForObject(requestUrl, OpenAIResponseDTO.class);
     }
 
-    public boolean checkIfRouteIsValid(DirectionsResponseDTO directionsResponseDTO){
+    public boolean checkIfRouteIsValid(DirectionsResponseDTO directionsResponseDTO) {
         return true;
     }
 
@@ -67,7 +67,6 @@ public class GoogleApiService {
                 "&mode=" + mode +
                 "&waypoints=" + waypoints +
                 "&key=" + GOOGLE_MAPS_API_KEY;
-
         return requestUrl;
     }
 
