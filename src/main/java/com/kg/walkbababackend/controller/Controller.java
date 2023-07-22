@@ -1,6 +1,7 @@
 package com.kg.walkbababackend.controller;
 
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.RouteToFrontEndDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import com.kg.walkbababackend.service.Services;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class Controller {
     Services services;
 
     @PostMapping(value = "/openai")
-    public ResponseEntity<List<OpenAIRouteDTO>> getOpenAIResponse(@RequestBody UserRequestDTO requestDTO) {
+    public ResponseEntity<RouteToFrontEndDTO> getOpenAIResponse(@RequestBody UserRequestDTO requestDTO) {
         return ResponseEntity.ok(services.getRoutes(requestDTO));
     }
 

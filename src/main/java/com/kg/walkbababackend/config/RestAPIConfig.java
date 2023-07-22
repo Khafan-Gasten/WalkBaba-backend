@@ -22,4 +22,11 @@ public class RestAPIConfig {
             });
             return restTemplate;
         }
+
+    @Bean
+    @Qualifier("googleRestTemplate")
+    public RestTemplate googleRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        return restTemplate;
+    }
 }

@@ -2,19 +2,24 @@ package com.kg.walkbababackend.service;
 
 
 import com.kg.walkbababackend.model.openai.DTO.*;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.WaypointDTO;
 import com.kg.walkbababackend.model.openai.DTO.directionsApi.DirectionsResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class GoogleApiService {
 
+    @Qualifier("googleRestTemplate")
     @Autowired
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     private final static String GOOGLE_MAPS_API_KEY = "AIzaSyBmOpstO2144GQzwOWrWL9NQLvQ5oyE_kw";
 
@@ -35,7 +40,11 @@ public class GoogleApiService {
 
     public DirectionsResponseDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
         String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
-        DirectionsResponseDTO response = restTemplate.getForObject(requestUrl, DirectionsResponseDTO.class);
+        System.out.println("String:" + requestUrl);
+
+        URI builtURI = URI.create(requestUrl);
+        System.out.println("URI: " + builtURI);
+        DirectionsResponseDTO response = restTemplate.getForObject(builtURI, DirectionsResponseDTO.class);
         return response;
     }
 
@@ -55,7 +64,7 @@ public class GoogleApiService {
         String destination = waypointsList.remove(waypointsList.size()-1);
 
         String waypointsJoined = String.join("", waypointsList);
-        String waypoints = waypointsJoined.replaceFirst("%7C", "");
+        String waypoints = waypointsJoined.replaceFirst("[|]", "");
 
         String optimize = "true";
         String mode = "walking";
@@ -67,6 +76,7 @@ public class GoogleApiService {
                 "&mode=" + mode +
                 "&waypoints=" + waypoints +
                 "&key=" + GOOGLE_MAPS_API_KEY;
+        System.out.println(requestUrl);
         return requestUrl;
     }
 
@@ -77,5 +87,11 @@ public class GoogleApiService {
         }
         String pointWithSpaces = "%7Cvia%3A" + point + "%2C" + requestDTO.city() + "%2C" + requestDTO.country();
         return pointWithSpaces.replaceAll("[\s']", "%20");
-    }
+
+//        if (isWaypoint == false) {
+//            return point + ", " + requestDTO.city() + ", " + requestDTO.country();
+//        }
+//        return "|via:" + point + " " + requestDTO.city() + " " + requestDTO.country();
+   }
+
 }

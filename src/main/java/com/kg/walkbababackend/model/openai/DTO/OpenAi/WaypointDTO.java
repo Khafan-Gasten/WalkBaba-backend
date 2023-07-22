@@ -1,4 +1,4 @@
-package com.kg.walkbababackend.model.openai.DTO;
+package com.kg.walkbababackend.model.openai.DTO.OpenAi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kg.walkbababackend.model.openai.DB.WaypointInfo;
