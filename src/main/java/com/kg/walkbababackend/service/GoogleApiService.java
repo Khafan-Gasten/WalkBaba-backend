@@ -31,6 +31,11 @@ public class GoogleApiService {
     @Value("${googleMap.imageMaxWidth}")
     Long imageMaxWidth;
 
+    int SHORTEST_WALK_TIME_S = 1200;
+    int LONGEST_WALK_TIME_S = 18000;
+    int SHORTEST_WALK_DIST_M = 1000;
+    int LONGEST_WALK_DIST_M = 12000;
+
     public List<DirectionsResponseDTO> getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
         return routes.stream()
                 .map(route -> getOneRoute(route, requestDTO))
@@ -44,7 +49,8 @@ public class GoogleApiService {
         int totalDuration = directionsResponseDTO.routes().get(0).legs.stream()
                 .mapToInt(leg -> leg.duration.value).sum();
         System.out.println("duration " + totalDuration + " distance " + totalDistance);
-        return totalDuration <= 18000 && totalDuration >= 1200 && totalDistance <= 12000 && totalDistance >= 1000;
+        return totalDuration <= LONGEST_WALK_TIME_S && totalDuration >= SHORTEST_WALK_TIME_S
+                && totalDistance <= LONGEST_WALK_DIST_M && totalDistance >= SHORTEST_WALK_DIST_M;
     }
 
     public DirectionsResponseDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
