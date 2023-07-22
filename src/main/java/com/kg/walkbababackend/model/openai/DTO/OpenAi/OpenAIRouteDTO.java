@@ -33,6 +33,19 @@ public record OpenAIRouteDTO(@JsonProperty("walk_name") String name,
                         .collect(Collectors.toList()));
     }
 
+    public OpenAIRouteDTO(String name, String description, List<WaypointDTO> waypoints) {
+        this(name,
+                null,
+                null,
+                description,
+                null,
+                null,
+                null,
+                null,
+                null,
+                waypoints);
+    }
+
 }
 
 

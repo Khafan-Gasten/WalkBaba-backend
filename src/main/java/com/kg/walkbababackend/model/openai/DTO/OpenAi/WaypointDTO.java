@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kg.walkbababackend.model.openai.DB.WaypointInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties
@@ -15,6 +16,4 @@ public record WaypointDTO(@JsonProperty("waypoint_name") String name, String des
     public WaypointDTO(WaypointInfo waypoint) {
         this(waypoint.getWaypointName(), waypoint.getWaypointDescription() , waypoint.getImageLink());
     }
-
-
 }
