@@ -3,7 +3,7 @@ package com.kg.walkbababackend.service;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.WaypointDTO;
-import com.kg.walkbababackend.model.openai.DTO.directionsApi.DirectionsResponseDTO;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.directionsApi.DirectionsResponseDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +29,7 @@ class GoogleApiServiceTest {
     WaypointDTO waypoint4 = new WaypointDTO("Palace of Holyroodhouse", "Official residence of the British monarch in Scotland.", null);
 
     List<WaypointDTO> waypoints = new ArrayList<>(Arrays.asList(waypoint1, waypoint2, waypoint3, waypoint4));
-    OpenAIRouteDTO route = new OpenAIRouteDTO("Old Town Exploration", "Discover the historic charm of Edinburgh's Old Town.", waypoints);
+    OpenAIRouteDTO route = new OpenAIRouteDTO("Old Town Exploration", "Discover the historic charm of Edinburgh's Old Town.", null, waypoints);
 
     UserRequestDTO requestDTO = new UserRequestDTO("UK", "Edinburgh", "1", "Food", false);
 
@@ -44,7 +44,7 @@ class GoogleApiServiceTest {
 
     @Test
     public void routeFetcherReturnsARoute() {
-        DirectionsResponseDTO directionsResponseDTO = googleApiService.getOneRoute(route, requestDTO);
+        DirectionsResponseDTO directionsResponseDTO = googleApiService.callDirectionsApi(route, requestDTO);
         System.out.println(directionsResponseDTO);
         System.out.println(directionsResponseDTO.geocodedWaypointList());
         assertNotNull(directionsResponseDTO);
