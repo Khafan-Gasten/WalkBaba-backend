@@ -37,14 +37,12 @@ public class GoogleApiService {
     public boolean checkIfRouteIsValid(DirectionsResponseDTO directionsResponseDTO) {
         int totalDistance = directionsResponseDTO.routes().get(0).legs.stream().mapToInt(leg -> leg.distance.value).sum();
         int totalDuration = directionsResponseDTO.routes().get(0).legs.stream().mapToInt(leg -> leg.duration.value).sum();
-
+        System.out.println("duration " + totalDuration + " distance " + totalDistance);
         return totalDuration <= 18000 && totalDuration >= 1200 && totalDistance <= 12000 && totalDistance >= 1000;
     }
 
     public DirectionsResponseDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
         String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
-        System.out.println("String:" + requestUrl);
-
         URI builtURI = URI.create(requestUrl);
         System.out.println("URI: " + builtURI);
         DirectionsResponseDTO response = restTemplate.getForObject(builtURI, DirectionsResponseDTO.class);
@@ -79,7 +77,6 @@ public class GoogleApiService {
                 "&mode=" + mode +
                 "&waypoints=" + waypoints +
                 "&key=" + GOOGLE_MAPS_API_KEY;
-        System.out.println(requestUrl);
         return requestUrl;
     }
 
