@@ -20,6 +20,11 @@ public class RouteInfo {
     private String country;
     private String routeName;
     private String routeDescription;
+    private  String theme ;
+    private  Long distance;
+    private Long durationInMin ;
+    private Long likes ;
+    private Long dislike ;
     @OneToMany(cascade = CascadeType.ALL)
     private List<WaypointInfo> waypoints;
 
@@ -33,11 +38,9 @@ public class RouteInfo {
                 .toList();
     }
 
-
     public RouteInfo() {
 
     }
-
     public long getRouteId() {
         return routeId;
     }
@@ -86,5 +89,43 @@ public class RouteInfo {
         this.waypoints = waypoints;
     }
 
+    public String getTheme() {
+        return theme;
+    }
 
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public Long getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Long distance) {
+        this.distance = distance;
+    }
+
+    public Long getDurationInMin() {
+        return durationInMin;
+    }
+
+    public void setDurationInMin(Long durationInMin) {
+        this.durationInMin = durationInMin;
+    }
+
+    public Long getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Long likes) {
+        this.likes = likes;
+    }
+
+    public Long getDislike() {
+        return dislike;
+    }
+
+    public void setDislike(Long dislike) {
+        this.dislike = dislike;
+    }
 }

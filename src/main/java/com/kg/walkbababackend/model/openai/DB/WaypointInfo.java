@@ -5,6 +5,8 @@ import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.WaypointDTO;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class WaypointInfo {
 
@@ -13,11 +15,14 @@ public class WaypointInfo {
     private long waypointID;
     private String waypointName;
     private String waypointDescription;
-    private String imageLink;
+
+    @ElementCollection
+    private List<String> imageLink;
 
     public WaypointInfo(WaypointDTO waypoints) {
         this.waypointName = waypoints.name();
         this.waypointDescription = waypoints.description();
+        this.imageLink = waypoints.imageLink();
     }
 
     public WaypointInfo() {
@@ -48,11 +53,11 @@ public class WaypointInfo {
         this.waypointDescription = waypointDescription;
     }
 
-    public String getImageLink() {
+    public List<String> getImageLink() {
         return imageLink;
     }
 
-    public void setImageLink(String imageLink) {
+    public void setImageLink(List<String> imageLink) {
         this.imageLink = imageLink;
     }
 }
