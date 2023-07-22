@@ -2,9 +2,9 @@ package com.kg.walkbababackend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRequestDTO;
-import com.kg.walkbababackend.model.openai.DTO.OpenAIResponseDTO;
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRequestDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIResponseDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,12 +54,14 @@ public class OpenAIService {
             OpenAIRouteDTO[] routeDTOS = mapper.readValue(response, OpenAIRouteDTO[].class);
             return Arrays.asList(routeDTOS);
         } catch (JsonProcessingException e) {
+            //Could we catch this and send it back to chatGPT and ask it to put it in Json format - how do you keep the conversion.
             throw new IllegalArgumentException("Json for chatGPT incorrect format for OpenAIRouteDTO!!!");
         } catch (StringIndexOutOfBoundsException ex) {
             throw new IllegalArgumentException("ChatGPT response is not a list list!!!");
         }
     }
 
+    //We can test this!! Just check that the api is responding then check for regex
     public String chat(String prompt) {
         // create a request
         OpenAIRequestDTO request = new OpenAIRequestDTO(model, prompt);

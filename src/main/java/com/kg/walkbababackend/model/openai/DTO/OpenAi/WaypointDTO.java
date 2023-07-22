@@ -1,4 +1,4 @@
-package com.kg.walkbababackend.model.openai.DTO;
+package com.kg.walkbababackend.model.openai.DTO.OpenAi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,5 +14,10 @@ public record WaypointDTO(@JsonProperty("waypoint_name") String name, String des
     }
     public WaypointDTO(WaypointInfo waypoint) {
         this(waypoint.getWaypointName(), waypoint.getWaypointDescription() , waypoint.getImageLink());
+    }
+
+    public WaypointDTO(@JsonProperty("waypoint_name") String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 }

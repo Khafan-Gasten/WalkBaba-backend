@@ -1,8 +1,7 @@
 package com.kg.walkbababackend.model.openai.DB;
 
 
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
-import com.kg.walkbababackend.model.openai.DTO.WaypointDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.WaypointDTO;
 import jakarta.persistence.*;
 
 import java.util.List;

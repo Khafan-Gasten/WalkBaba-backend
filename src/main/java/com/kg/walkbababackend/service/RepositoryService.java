@@ -1,7 +1,7 @@
 package com.kg.walkbababackend.service;
 
 import com.kg.walkbababackend.model.openai.DB.RouteInfo;
-import com.kg.walkbababackend.model.openai.DTO.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import com.kg.walkbababackend.model.openai.Repo.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
