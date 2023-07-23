@@ -22,15 +22,16 @@ public class Services {
     RepositoryService repoService;
 
     public List<RouteToFrontEndDTO> getRoutes(UserRequestDTO requestDTO) {
-//        List<RouteInfo> routesFromDB = repoService.getRoutesFromDB(requestDTO);
-//        if (!routesFromDB.isEmpty()) {
-//            List<RouteToFrontEndDTO> routesReformat = routesFromDB.stream()
-//                    .map(RouteToFrontEndDTO::new)
-//                    .collect(Collectors.toList());
-//            return addCityAndCountryDetails(routesReformat, requestDTO);
-//        }
+        List<RouteInfo> routesFromDB = repoService.getRoutesFromDB(requestDTO);
+        if (!routesFromDB.isEmpty()) {
+            List<RouteToFrontEndDTO> routesReformat = routesFromDB.stream()
+                    .map(RouteToFrontEndDTO::new)
+                    .collect(Collectors.toList());
+            return addCityAndCountryDetails(routesReformat, requestDTO);
+        }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
         List<RouteToFrontEndDTO> routesToRender = googleApiService.getRoutesToRender(routes, requestDTO);
+        //repoService.saveRoute(routesToRender);
         return addCityAndCountryDetails(routesToRender, requestDTO);
     }
 

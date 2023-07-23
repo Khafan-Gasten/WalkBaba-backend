@@ -31,7 +31,7 @@ public class OpenAIService {
 
     private static final String CHATGPT_PROMPT_TEMPLATE =
          "Can you give me walking tour routes with the below details:\n" +
-                 "- in the city of Rotterdam, Netherlands\n" +
+                 "- in the city of %s, %s\n" +
                  "- contain highlights saved as waypoints\n" +
                  "- each waypoint should have a short description\n" +
                  "- the routes should be of varying lengths\n" +
