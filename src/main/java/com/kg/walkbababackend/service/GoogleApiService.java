@@ -1,6 +1,5 @@
 package com.kg.walkbababackend.service;
 
-
 import com.kg.walkbababackend.model.openai.DTO.*;
 import com.kg.walkbababackend.model.openai.DTO.MapsApi.ImagesApi.GMapResponseDTO;
 import com.kg.walkbababackend.model.openai.DTO.MapsApi.directionsApi.Leg;
@@ -66,7 +65,7 @@ public class GoogleApiService {
 
     public Long[] calculateTotals(List<Leg> legs) {
         Long totalDistance = (long) (legs.stream().mapToInt(leg -> leg.distance.value).sum())/1000; //Need to be careful with rounding
-        Long totalDuration = (long) (legs.stream().mapToInt(leg -> leg.distance.value).sum())/60;
+        Long totalDuration = (long) (legs.stream().mapToInt(leg -> leg.duration.value).sum())/60;
         System.out.println("duration " + totalDuration + " distance " + totalDistance);
         return new Long[]{totalDistance, totalDuration};
     }
@@ -127,6 +126,9 @@ public class GoogleApiService {
                 "&key=%s",GOOGLE_API_URL_BASE,placeId, GOOGLE_MAPS_API_KEY) ;
         System.out.println(requestUrl);
         GMapResponseDTO responseDTO = restTemplate.getForObject(requestUrl, GMapResponseDTO.class);
+        if (responseDTO.result().photos() == null) {
+            return new ArrayList<>();
+        }
         return responseDTO.result().photos()
                 .stream()
                 .limit(5)
@@ -134,6 +136,5 @@ public class GoogleApiService {
                         "?maxwidth=%d" +
                         "&photo_reference=%s" +
                         "&key=%s",GOOGLE_API_URL_BASE, imageMaxWidth, photo.photoReference(), GOOGLE_MAPS_API_KEY)).toList();
-
     }
 }
