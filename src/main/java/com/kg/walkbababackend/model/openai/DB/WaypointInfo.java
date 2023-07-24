@@ -16,6 +16,7 @@ public class WaypointInfo {
     private String waypointDescription;
 
     @ElementCollection
+    @Column(length = 1000)
     private List<String> imageLink;
 
     public WaypointInfo(WaypointDTO waypoints) {
