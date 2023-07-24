@@ -3,6 +3,7 @@ package com.kg.walkbababackend.model.openai.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kg.walkbababackend.model.openai.DB.RouteInfo;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.ExportLinkDTO;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.WaypointDTO;
 
@@ -19,7 +20,7 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                                  Long durationInMin,
                                  Long like,
                                  Long dislike,
-                                 String exportLink,
+                                 ExportLinkDTO exportLinks,
                                  @JsonProperty("waypoints") List<WaypointDTO> waypoints) {
     public RouteToFrontEndDTO(RouteInfo routeInfo) {
         this(routeInfo.getRouteName(),
@@ -31,7 +32,7 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                 routeInfo.getDurationInMin(),
                 routeInfo.getLikes(),
                 routeInfo.getDislike(),
-                routeInfo.getExportLink(),
+                new ExportLinkDTO(routeInfo.getExportLink()),
                 routeInfo.getWaypoints().stream()
                         .map(waypoint -> new WaypointDTO(waypoint))
                         .collect(Collectors.toList()));
@@ -40,7 +41,7 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
     public RouteToFrontEndDTO(OpenAIRouteDTO openAIRouteDTO,
                           UserRequestDTO userRequestDTO,
                           Long[] distanceAndDuration,
-                          String exportLink,
+                          ExportLinkDTO exportLinks,
                           List<WaypointDTO> waypoints) {
         this(openAIRouteDTO.name(),
                 userRequestDTO.city(),
@@ -51,7 +52,7 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                 distanceAndDuration[1],
                 0L,
                 0L,
-                exportLink,
+                exportLinks,
                 waypoints);
     }
 }

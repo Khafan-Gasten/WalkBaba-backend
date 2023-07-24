@@ -1,6 +1,7 @@
 package com.kg.walkbababackend.service;
 
 import com.kg.walkbababackend.model.openai.DTO.*;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.ExportLinkDTO;
 import com.kg.walkbababackend.model.openai.DTO.MapsApi.ImagesApi.GMapResponseDTO;
 import com.kg.walkbababackend.model.openai.DTO.MapsApi.directionsApi.Leg;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
@@ -54,14 +55,9 @@ public class GoogleApiService {
     }
 
     public RouteToFrontEndDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
-
         String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO, false);
         String reverseRequestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO, true);
-
-        String exportLink = exportMapsUrlBuilder(requestUrl);
-        String flippedWaypointsUrl = exportMapsUrlBuilder(reverseRequestUrl);
-        String startExportLink = startExportMapsUrlBuilder(exportLink) ;
-        String endExportLink = startExportMapsUrlBuilder(flippedWaypointsUrl);
+        ExportLinkDTO exportLinks = urlBuilders(requestUrl, reverseRequestUrl);
 
         DirectionsResponseDTO directions = callDirectionsApi(routeDTO, requestDTO, requestUrl);
         Long[] totalDistAndDur = calculateTotals(directions.routes().get(0).legs);     //Why is it get 0?
@@ -73,7 +69,7 @@ public class GoogleApiService {
         for (int i = 0; i < waypoints.size(); i++) {
             newWaypointDTOS.add(waypoints.get(i).withImageLink(imageUrls.get(i)));
         }
-        return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDistAndDur, exportLink, newWaypointDTOS);
+        return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDistAndDur, exportLinks, newWaypointDTOS);
     }
 
     private String startExportMapsUrlBuilder(String exportLink) {
@@ -91,11 +87,20 @@ public class GoogleApiService {
     }
 
     public DirectionsResponseDTO callDirectionsApi(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO, String requestUrl) {
-//        String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
         URI builtURI = URI.create(requestUrl);
         System.out.println("URI: " + builtURI);
         DirectionsResponseDTO response = restTemplate.getForObject(builtURI, DirectionsResponseDTO.class);
         return response;
+    }
+
+    public ExportLinkDTO urlBuilders(String requestUrl, String reverseRequestUrl) {
+        String exportLink = exportMapsUrlBuilder(requestUrl);
+        String flippedWaypointsUrl = exportMapsUrlBuilder(reverseRequestUrl);
+
+        String startExportLink = startExportMapsUrlBuilder(exportLink) ;
+        String endExportLink = startExportMapsUrlBuilder(flippedWaypointsUrl);
+
+        return new ExportLinkDTO(exportLink, startExportLink, endExportLink);
     }
 
     public String directionApiUrlRequestBuilder(OpenAIRouteDTO route, UserRequestDTO requestDTO, Boolean reverseWaypoints) {
