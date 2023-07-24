@@ -7,6 +7,7 @@ import com.kg.walkbababackend.model.openai.DTO.Saving.UserDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import com.kg.walkbababackend.service.Services;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,8 +41,12 @@ public class Controller {
         return ResponseEntity.ok(services.setUserSaveRoute(saveRouteRequest));
     }
 
+
     @GetMapping(value = "/saveroute")
     public ResponseEntity<List<RouteToFrontEndDTO>> getUserSavedRoute(@RequestParam long userId){
         return ResponseEntity.ok(services.getUserSavedRoute(userId));
     }
+
+
+
 }

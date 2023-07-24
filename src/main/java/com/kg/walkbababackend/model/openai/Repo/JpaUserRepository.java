@@ -11,6 +11,6 @@ public interface JpaUserRepository extends JpaRepository<UserInfo, Long> {
     UserInfo findByUserName(String userName);
 
 
-// @Query( value =  "select saveRoute from UserInfo user join user.saveRoute saveRoute where user.userId = :id")
+ @Query( value =  "select user.saveRoute from UserInfo user where user.userId = :id")
     List<RouteInfo> findSavedRouteByUserId(long id) ;
 }

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class ServicesTest {
@@ -22,9 +24,14 @@ class ServicesTest {
     }
     @Test
     void setUserSaveRouteShouldSaveCorrectlyForSpecificUser() {
-//        UserInfo userInfo = services.createUser("Max", "13642");
-        SaveRouteRequestDTO saveRouteRequestDTO = new SaveRouteRequestDTO(1, 4);
+        SaveRouteRequestDTO saveRouteRequestDTO = new SaveRouteRequestDTO(1, 5);
         RouteToFrontEndDTO routeToFrontEndDTO = services.setUserSaveRoute(saveRouteRequestDTO);
-        assertEquals(routeToFrontEndDTO.routeId(), 4);
+        assertEquals(routeToFrontEndDTO.routeId(), 5);
+    }
+
+    @Test
+    void getUserSavedRouteFromDBShouldReturn5() {
+        List<RouteToFrontEndDTO> routeToFrontEndDTOs = services.getUserSavedRoute(1);
+        assertEquals(routeToFrontEndDTOs.size(), 5);
     }
 }

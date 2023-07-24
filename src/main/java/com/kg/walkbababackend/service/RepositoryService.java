@@ -35,14 +35,19 @@ public class RepositoryService {
         RouteInfo routeInfo = routeRepo.getRouteById(routeId);
         UserInfo userInfo = userRepo.getUserById(userId);
         List<RouteInfo> routeInfos = userInfo.getSaveRoute();
-        routeInfos.add(routeInfo);
-        userInfo.setSaveRoute(routeInfos);
-        userRepo.saveUser(userInfo);
+        boolean isExist = routeInfos.stream().anyMatch( savedRouteInfo -> savedRouteInfo.getRouteId() == routeId) ;
+        if( !isExist){
+            routeInfos.add(routeInfo);
+            userInfo.setSaveRoute(routeInfos);
+            userRepo.saveUser(userInfo);
+        }
         return new RouteToFrontEndDTO(routeInfo);
     }
 
     public List<RouteToFrontEndDTO> getUserSavedRouteFromDB(long userId) {
-        return userRepo.getSavedRoute(userId).stream()
+        List<RouteInfo> savedRoute = userRepo.getSavedRoute(userId);
+
+        return savedRoute.stream()
                 .map(routeInfo -> new RouteToFrontEndDTO(routeInfo))
                 .toList();
     }
