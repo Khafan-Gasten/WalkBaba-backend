@@ -55,4 +55,5 @@ public class UserInfo {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+
 }
