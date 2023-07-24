@@ -47,6 +47,11 @@ public class Controller {
         return ResponseEntity.ok(services.getUserSavedRoute(userId));
     }
 
+    @DeleteMapping("/saveroute")
+    public ResponseEntity<Void> deleteCart(@RequestBody SaveRouteRequestDTO saveRouteRequest) {
+        services.deleteUserSavedRoute(saveRouteRequest);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }

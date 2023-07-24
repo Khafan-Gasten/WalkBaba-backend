@@ -56,4 +56,7 @@ public class Services {
         return repoService.createUser(userName, password);
     }
 
+    public void deleteUserSavedRoute(SaveRouteRequestDTO saveRouteRequest) {
+        repoService.deleteUserSavedRouteFromDB( saveRouteRequest.id() , saveRouteRequest.routeId() );
+    }
 }

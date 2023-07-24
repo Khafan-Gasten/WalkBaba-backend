@@ -56,4 +56,18 @@ public class RepositoryService {
         UserInfo user = new UserInfo(userName, password);
         return userRepo.saveUser(user);
     }
+
+    public void deleteUserSavedRouteFromDB(long userId, long routeId) {
+        UserInfo userInfo = userRepo.getUserById(userId);
+        RouteInfo savedRoute = userInfo.getSaveRoute()
+                .stream()
+                .filter(saved -> saved.getRouteId() == routeId)
+                .findAny()
+                .orElse(null);
+
+        if( savedRoute != null) {
+            userInfo.getSaveRoute().remove(savedRoute);
+            userRepo.saveUser(userInfo);
+        }
+    }
 }

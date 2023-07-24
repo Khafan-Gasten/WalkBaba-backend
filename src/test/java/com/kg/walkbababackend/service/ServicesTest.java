@@ -34,4 +34,14 @@ class ServicesTest {
         List<RouteToFrontEndDTO> routeToFrontEndDTOs = services.getUserSavedRoute(1);
         assertEquals(routeToFrontEndDTOs.size(), 5);
     }
+
+    @Test
+    void deleteSaveRouteShouldBeLengthOf4(){
+        List<RouteToFrontEndDTO> beforRouteToFrontEndDTOs = services.getUserSavedRoute(1);
+        SaveRouteRequestDTO saveRouteRequestDTO = new SaveRouteRequestDTO(1,
+                beforRouteToFrontEndDTOs.get(0).routeId());
+        services.deleteUserSavedRoute(saveRouteRequestDTO); ;
+        List<RouteToFrontEndDTO> routeToFrontEndDTOs = services.getUserSavedRoute(1);
+        assertEquals(routeToFrontEndDTOs.size(), beforRouteToFrontEndDTOs.size()-1);
+    }
 }
