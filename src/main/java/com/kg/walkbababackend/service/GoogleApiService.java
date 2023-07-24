@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -53,8 +54,15 @@ public class GoogleApiService {
     }
 
     public RouteToFrontEndDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
-        String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
+
+        String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO, false);
+        String reverseRequestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO, true);
+
         String exportLink = exportMapsUrlBuilder(requestUrl);
+        String flippedWaypointsUrl = exportMapsUrlBuilder(reverseRequestUrl);
+        String startExportLink = startExportMapsUrlBuilder(exportLink) ;
+        String endExportLink = startExportMapsUrlBuilder(flippedWaypointsUrl);
+
         DirectionsResponseDTO directions = callDirectionsApi(routeDTO, requestDTO, requestUrl);
         Long[] totalDistAndDur = calculateTotals(directions.routes().get(0).legs);     //Why is it get 0?
         List<List<String>> imageUrls = directions.geocodedWaypointList().stream()
@@ -66,6 +74,13 @@ public class GoogleApiService {
             newWaypointDTOS.add(waypoints.get(i).withImageLink(imageUrls.get(i)));
         }
         return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDistAndDur, exportLink, newWaypointDTOS);
+    }
+
+    private String startExportMapsUrlBuilder(String exportLink) {
+        String startingPointUrl = exportLink.split("&origin=")[1].split("&destination=")[0];
+        String mapToStartingPoint = exportLink.replace("&origin=" + startingPointUrl,"")
+                .replace("&waypoints=", ("&waypoints=" + startingPointUrl));
+        return mapToStartingPoint;
     }
 
     public Long[] calculateTotals(List<Leg> legs) {
@@ -83,9 +98,13 @@ public class GoogleApiService {
         return response;
     }
 
-    public String directionApiUrlRequestBuilder(OpenAIRouteDTO route, UserRequestDTO requestDTO) {
+    public String directionApiUrlRequestBuilder(OpenAIRouteDTO route, UserRequestDTO requestDTO, Boolean reverseWaypoints) {
         List<WaypointDTO> waypointsDTOList = route.waypoints();
         List<String> waypointsList = new ArrayList<>();
+
+        if (reverseWaypoints == true){
+            Collections.reverse(waypointsDTOList);
+        }
 
         for (int i = 0; i < waypointsDTOList.size(); i++) {
             if (i == 0 || i == waypointsDTOList.size()-1) {
@@ -112,13 +131,13 @@ public class GoogleApiService {
                 "&mode=" + mode +
                 "&waypoints=" + waypoints +
                 "&key=" + GOOGLE_MAPS_API_KEY;
+
         return requestUrl;
     }
 
     public String exportMapsUrlBuilder(String mapsRequestApiUrl){
         String exportMapsUrl = mapsRequestApiUrl.replace(GOOGLE_API_URL_BASE + "/directions/json?", GOOGLE_MAPS_EXPORT_URL_BASE)
-               .replace("&mode=walking", "")
-                .replace("&optimize=true", "")
+               .replace("&optimize=true&mode=walking", "")
                 .split("&key=")[0]
                 .concat("&travelmode=walking");
         return exportMapsUrl;

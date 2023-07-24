@@ -403,7 +403,7 @@ class GoogleApiServiceTest {
     private static final String EDINBURGH_EXPORT_MAP_RESPONSE_URL = "https://www.google.com/maps/dir/?api=1&origin=Edinburgh%20Castle%2C%20Edinburgh%2C%20UK&destination=Palace%20of%20Holyroodhouse%2C%20Edinburgh%2C%20UK&waypoints=%7Cvia%3ARoyal%20Mile%2CEdinburgh%2CUK%7Cvia%3ASt.%20Giles%20%20Cathedral%2CEdinburgh%2CUK&travelmode=walking";
     @Test
     public void urlBuilderReturnsCorrectUrlFormat() {
-        String url = googleApiService.directionApiUrlRequestBuilder(route, requestDTO);
+        String url = googleApiService.directionApiUrlRequestBuilder(route, requestDTO, false);
         System.out.println(url);
         assert(url.length() > 0);
         assertEquals(EDINBURGH_RESPONSE_URL, url);
