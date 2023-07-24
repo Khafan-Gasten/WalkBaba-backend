@@ -37,10 +37,10 @@ public class GoogleApiService {
     @Value("${googleMap.imageMaxWidth}")
     Long imageMaxWidth;
 
-    int SHORTEST_WALK_TIME_MIN = 20;
-    int LONGEST_WALK_TIME_MIN = 300;
-    int SHORTEST_WALK_DIST_KM = 1;
-    int LONGEST_WALK_DIST_KM = 12;
+    Long SHORTEST_WALK_TIME_MIN = 20L;
+    Long LONGEST_WALK_TIME_MIN = 300L;
+    Double SHORTEST_WALK_DIST_KM = 1.0;
+    Double LONGEST_WALK_DIST_KM = 12.0;
 
     public List<RouteToFrontEndDTO> getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
         return routes.stream()
@@ -49,7 +49,7 @@ public class GoogleApiService {
                 .toList();
     }
 
-    public boolean checkIfRouteIsValid(Long distance, Long duration) {
+    public boolean checkIfRouteIsValid(Double distance, Long duration) {
         return duration <= LONGEST_WALK_TIME_MIN && duration >= SHORTEST_WALK_TIME_MIN
                 && distance <= LONGEST_WALK_DIST_KM && distance >= SHORTEST_WALK_DIST_KM;
     }
@@ -60,7 +60,8 @@ public class GoogleApiService {
         ExportLinkDTO exportLinks = urlBuilders(requestUrl, reverseRequestUrl);
 
         DirectionsResponseDTO directions = callDirectionsApi(routeDTO, requestDTO, requestUrl);
-        Long[] totalDistAndDur = calculateTotals(directions.routes().get(0).legs);     //Why is it get 0?
+        Double totalDist = calculateDistance(directions.routes().get(0).legs);
+        Long totalDur = calculateDuration(directions.routes().get(0).legs);     //Why is it get 0?
         List<List<String>> imageUrls = directions.geocodedWaypointList().stream()
                 .map(waypoint -> getPlaceImageUrl(waypoint.place_id))
                 .toList();
@@ -69,7 +70,7 @@ public class GoogleApiService {
         for (int i = 0; i < waypoints.size(); i++) {
             newWaypointDTOS.add(waypoints.get(i).withImageLink(imageUrls.get(i)));
         }
-        return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDistAndDur, exportLinks, newWaypointDTOS);
+        return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDist, totalDur, exportLinks, newWaypointDTOS);
     }
 
     private String startExportMapsUrlBuilder(String exportLink) {
@@ -79,11 +80,12 @@ public class GoogleApiService {
         return mapToStartingPoint;
     }
 
-    public Long[] calculateTotals(List<Leg> legs) {
-        Long totalDistance = (long) (legs.stream().mapToInt(leg -> leg.distance.value).sum())/1000; //Need to be careful with rounding
-        Long totalDuration = (long) (legs.stream().mapToInt(leg -> leg.duration.value).sum())/60;
-        System.out.println("duration " + totalDuration + " distance " + totalDistance);
-        return new Long[]{totalDistance, totalDuration};
+    public double calculateDistance(List<Leg> legs) {
+        return Math.round(((double) (legs.stream().mapToInt(leg -> leg.distance.value).sum()))/100)/10; //Need to be careful with rounding
+    }
+
+    public long calculateDuration(List<Leg> legs) {
+        return  ((long) (((legs.stream().mapToInt(leg -> leg.duration.value).sum()))/60));
     }
 
     public DirectionsResponseDTO callDirectionsApi(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO, String requestUrl) {

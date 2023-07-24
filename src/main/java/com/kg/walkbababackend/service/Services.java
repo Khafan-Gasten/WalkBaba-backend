@@ -31,7 +31,7 @@ public class Services {
         }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
         List<RouteToFrontEndDTO> routesToRender = googleApiService.getRoutesToRender(routes, requestDTO);
-        repoService.saveRoute(routesToRender);
+        //repoService.saveRoute(routesToRender);
         return addCityAndCountryDetails(routesToRender, requestDTO);
     }
 

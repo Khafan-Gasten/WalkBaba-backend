@@ -22,7 +22,7 @@ public class RouteInfo {
     private String routeName;
     private String routeDescription;
     private String theme ;
-    private Long distance;
+    private Double distance;
     private Long durationInMin ;
     private Long likes ;
     private Long dislike;
@@ -106,11 +106,11 @@ public class RouteInfo {
         this.theme = theme;
     }
 
-    public Long getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(Long distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 
