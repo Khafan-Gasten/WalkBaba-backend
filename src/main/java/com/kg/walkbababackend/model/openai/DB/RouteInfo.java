@@ -24,7 +24,9 @@ public class RouteInfo {
     private Long distance;
     private Long durationInMin ;
     private Long likes ;
-    private Long dislike ;
+    private Long dislike;
+    @Column(name="export_link", length=1000)
+    private String exportLink;
     @OneToMany(cascade = CascadeType.ALL)
     private List<WaypointInfo> waypoints;
 
@@ -38,6 +40,7 @@ public class RouteInfo {
         this.durationInMin = routeToFrontEndDTO.durationInMin();
         this.dislike = routeToFrontEndDTO.dislike();
         this.likes = routeToFrontEndDTO.like();
+        this.exportLink = routeToFrontEndDTO.exportLink();
         this.waypoints = routeToFrontEndDTO.waypoints().stream()
                 .map(WaypointInfo::new)
                 .toList();
@@ -132,5 +135,13 @@ public class RouteInfo {
 
     public void setDislike(Long dislike) {
         this.dislike = dislike;
+    }
+
+    public String getExportLink() {
+        return exportLink;
+    }
+
+    public void setExportLink(String exportLink) {
+        this.exportLink = exportLink;
     }
 }

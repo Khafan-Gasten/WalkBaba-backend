@@ -8,6 +8,8 @@ googleMap:
     url: https://maps.googleapis.com/maps/api
     key: AIzaSyBmOpstO2144GQzwOWrWL9NQLvQ5oyE_kw
   imageMaxWidth: 500
+  maps:
+    url: https://www.google.com/maps/dir/?api=1&
 
 debug: true
 spring:

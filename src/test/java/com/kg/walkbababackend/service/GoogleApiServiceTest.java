@@ -400,6 +400,7 @@ class GoogleApiServiceTest {
     UserRequestDTO requestDTO = new UserRequestDTO("UK", "Edinburgh", "1", "Food", false);
 
     private static final String EDINBURGH_RESPONSE_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=Edinburgh%20Castle%2C%20Edinburgh%2C%20UK&destination=Palace%20of%20Holyroodhouse%2C%20Edinburgh%2C%20UK&optimize=true&mode=walking&waypoints=%7Cvia%3ARoyal%20Mile%2CEdinburgh%2CUK%7Cvia%3ASt.%20Giles%20%20Cathedral%2CEdinburgh%2CUK&key=AIzaSyBmOpstO2144GQzwOWrWL9NQLvQ5oyE_kw";
+    private static final String EDINBURGH_EXPORT_MAP_RESPONSE_URL = "https://www.google.com/maps/dir/?api=1&origin=Edinburgh%20Castle%2C%20Edinburgh%2C%20UK&destination=Palace%20of%20Holyroodhouse%2C%20Edinburgh%2C%20UK&waypoints=%7Cvia%3ARoyal%20Mile%2CEdinburgh%2CUK%7Cvia%3ASt.%20Giles%20%20Cathedral%2CEdinburgh%2CUK&travelmode=walking";
     @Test
     public void urlBuilderReturnsCorrectUrlFormat() {
         String url = googleApiService.directionApiUrlRequestBuilder(route, requestDTO);
@@ -409,8 +410,16 @@ class GoogleApiServiceTest {
     }
 
     @Test
+    public void exportUrlBuilderReturnsCorrectUrl() {
+        String url = googleApiService.exportMapsUrlBuilder(EDINBURGH_RESPONSE_URL);
+        System.out.println(url);
+        assert(url.length() > 0);
+        assertEquals(EDINBURGH_EXPORT_MAP_RESPONSE_URL, url);
+    }
+
+    @Test
     public void routeFetcherReturnsARoute() {
-        DirectionsResponseDTO directionsResponseDTO = googleApiService.callDirectionsApi(route, requestDTO);
+        DirectionsResponseDTO directionsResponseDTO = googleApiService.callDirectionsApi(route, requestDTO, EDINBURGH_RESPONSE_URL);
         System.out.println(directionsResponseDTO);
         System.out.println(directionsResponseDTO.geocodedWaypointList());
         assertNotNull(directionsResponseDTO);

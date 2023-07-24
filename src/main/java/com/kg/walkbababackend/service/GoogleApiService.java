@@ -29,6 +29,9 @@ public class GoogleApiService {
     @Value("${googleMap.api.url}")
     String GOOGLE_API_URL_BASE ;
 
+    @Value("${googleMap.maps.url}")
+    String GOOGLE_MAPS_EXPORT_URL_BASE ;
+
     @Value("${googleMap.imageMaxWidth}")
     Long imageMaxWidth;
 
@@ -50,7 +53,9 @@ public class GoogleApiService {
     }
 
     public RouteToFrontEndDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
-        DirectionsResponseDTO directions = callDirectionsApi(routeDTO, requestDTO);
+        String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
+        String exportLink = exportMapsUrlBuilder(requestUrl);
+        DirectionsResponseDTO directions = callDirectionsApi(routeDTO, requestDTO, requestUrl);
         Long[] totalDistAndDur = calculateTotals(directions.routes().get(0).legs);     //Why is it get 0?
         List<List<String>> imageUrls = directions.geocodedWaypointList().stream()
                 .map(waypoint -> getPlaceImageUrl(waypoint.place_id))
@@ -60,7 +65,7 @@ public class GoogleApiService {
         for (int i = 0; i < waypoints.size(); i++) {
             newWaypointDTOS.add(waypoints.get(i).withImageLink(imageUrls.get(i)));
         }
-        return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDistAndDur, newWaypointDTOS);
+        return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDistAndDur, exportLink, newWaypointDTOS);
     }
 
     public Long[] calculateTotals(List<Leg> legs) {
@@ -70,8 +75,8 @@ public class GoogleApiService {
         return new Long[]{totalDistance, totalDuration};
     }
 
-    public DirectionsResponseDTO callDirectionsApi(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
-        String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
+    public DirectionsResponseDTO callDirectionsApi(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO, String requestUrl) {
+//        String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
         URI builtURI = URI.create(requestUrl);
         System.out.println("URI: " + builtURI);
         DirectionsResponseDTO response = restTemplate.getForObject(builtURI, DirectionsResponseDTO.class);
@@ -108,6 +113,15 @@ public class GoogleApiService {
                 "&waypoints=" + waypoints +
                 "&key=" + GOOGLE_MAPS_API_KEY;
         return requestUrl;
+    }
+
+    public String exportMapsUrlBuilder(String mapsRequestApiUrl){
+        String exportMapsUrl = mapsRequestApiUrl.replace(GOOGLE_API_URL_BASE + "/directions/json?", GOOGLE_MAPS_EXPORT_URL_BASE)
+               .replace("&mode=walking", "")
+                .replace("&optimize=true", "")
+                .split("&key=")[0]
+                .concat("&travelmode=walking");
+        return exportMapsUrl;
     }
 
     public String addCityAndCountryDetails(String point, UserRequestDTO requestDTO, Boolean isWaypoint) {
