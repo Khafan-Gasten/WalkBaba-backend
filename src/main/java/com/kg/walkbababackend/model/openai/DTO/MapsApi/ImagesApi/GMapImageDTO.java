@@ -1,4 +1,4 @@
-package com.kg.walkbababackend.model.openai.DTO;
+package com.kg.walkbababackend.model.openai.DTO.MapsApi.ImagesApi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

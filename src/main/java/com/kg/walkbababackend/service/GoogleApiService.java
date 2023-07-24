@@ -1,10 +1,11 @@
 package com.kg.walkbababackend.service;
 
-
 import com.kg.walkbababackend.model.openai.DTO.*;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.ImagesApi.GMapResponseDTO;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.directionsApi.Leg;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.WaypointDTO;
-import com.kg.walkbababackend.model.openai.DTO.directionsApi.DirectionsResponseDTO;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.directionsApi.DirectionsResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,29 +32,45 @@ public class GoogleApiService {
     @Value("${googleMap.imageMaxWidth}")
     Long imageMaxWidth;
 
-    int SHORTEST_WALK_TIME_S = 1200;
-    int LONGEST_WALK_TIME_S = 18000;
-    int SHORTEST_WALK_DIST_M = 1000;
-    int LONGEST_WALK_DIST_M = 12000;
+    int SHORTEST_WALK_TIME_MIN = 20;
+    int LONGEST_WALK_TIME_MIN = 300;
+    int SHORTEST_WALK_DIST_KM = 1;
+    int LONGEST_WALK_DIST_KM = 12;
 
-    public List<DirectionsResponseDTO> getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
+    public List<RouteToFrontEndDTO> getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
         return routes.stream()
                 .map(route -> getOneRoute(route, requestDTO))
-                .filter(this::checkIfRouteIsValid)
+                .filter(route -> checkIfRouteIsValid(route.distance(), route.durationInMin()))
                 .toList();
     }
 
-    public boolean checkIfRouteIsValid(DirectionsResponseDTO directionsResponseDTO) {
-        int totalDistance = directionsResponseDTO.routes().get(0).legs.stream()
-                .mapToInt(leg -> leg.distance.value).sum();
-        int totalDuration = directionsResponseDTO.routes().get(0).legs.stream()
-                .mapToInt(leg -> leg.duration.value).sum();
-        System.out.println("duration " + totalDuration + " distance " + totalDistance);
-        return totalDuration <= LONGEST_WALK_TIME_S && totalDuration >= SHORTEST_WALK_TIME_S
-                && totalDistance <= LONGEST_WALK_DIST_M && totalDistance >= SHORTEST_WALK_DIST_M;
+    public boolean checkIfRouteIsValid(Long distance, Long duration) {
+        return duration <= LONGEST_WALK_TIME_MIN && duration >= SHORTEST_WALK_TIME_MIN
+                && distance <= LONGEST_WALK_DIST_KM && distance >= SHORTEST_WALK_DIST_KM;
     }
 
-    public DirectionsResponseDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
+    public RouteToFrontEndDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
+        DirectionsResponseDTO directions = callDirectionsApi(routeDTO, requestDTO);
+        Long[] totalDistAndDur = calculateTotals(directions.routes().get(0).legs);     //Why is it get 0?
+        List<List<String>> imageUrls = directions.geocodedWaypointList().stream()
+                .map(waypoint -> getPlaceImageUrl(waypoint.place_id))
+                .toList();
+        List<WaypointDTO> newWaypointDTOS = new ArrayList<>();
+        List<WaypointDTO> waypoints = routeDTO.waypoints();
+        for (int i = 0; i < waypoints.size(); i++) {
+            newWaypointDTOS.add(waypoints.get(i).withImageLink(imageUrls.get(i)));
+        }
+        return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDistAndDur, newWaypointDTOS);
+    }
+
+    public Long[] calculateTotals(List<Leg> legs) {
+        Long totalDistance = (long) (legs.stream().mapToInt(leg -> leg.distance.value).sum())/1000; //Need to be careful with rounding
+        Long totalDuration = (long) (legs.stream().mapToInt(leg -> leg.duration.value).sum())/60;
+        System.out.println("duration " + totalDuration + " distance " + totalDistance);
+        return new Long[]{totalDistance, totalDuration};
+    }
+
+    public DirectionsResponseDTO callDirectionsApi(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
         String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO);
         URI builtURI = URI.create(requestUrl);
         System.out.println("URI: " + builtURI);
@@ -107,14 +124,17 @@ public class GoogleApiService {
                 "?fields=photos" +
                 "&place_id=%s" +
                 "&key=%s",GOOGLE_API_URL_BASE,placeId, GOOGLE_MAPS_API_KEY) ;
+        System.out.println(requestUrl);
         GMapResponseDTO responseDTO = restTemplate.getForObject(requestUrl, GMapResponseDTO.class);
+        if (responseDTO.result().photos() == null) {
+            return new ArrayList<>();
+        }
         return responseDTO.result().photos()
                 .stream()
                 .limit(5)
                 .map(photo -> String.format("%s/place/photo" +
                         "?maxwidth=%d" +
                         "&photo_reference=%s" +
-                        "&key=%s",GOOGLE_API_URL_BASE,  imageMaxWidth, photo.photoReference(), GOOGLE_MAPS_API_KEY)).toList();
-
+                        "&key=%s",GOOGLE_API_URL_BASE, imageMaxWidth, photo.photoReference(), GOOGLE_MAPS_API_KEY)).toList();
     }
 }

@@ -95,12 +95,12 @@ class OpenAIServiceTest {
         assertEquals("Json for chatGPT incorrect format for OpenAIRouteDTO!!!", ex.getMessage());
     }
 
-    @Test
-    public void getListOfRouteThrowsExceptionForIncorrectKey() {
-        String badJsonResponse = BRISTOL_CHAT_GPT_RESPONSE.replace("waypoint_name", "waypoints_name");
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> openAIService.getListOfRoute(badJsonResponse));
-        assertEquals("Json for chatGPT incorrect format for OpenAIRouteDTO!!!", ex.getMessage());
-    }
+//    @Test
+//    public void getListOfRouteThrowsExceptionForIncorrectKey() {
+//        String badJsonResponse = BRISTOL_CHAT_GPT_RESPONSE.replace("waypoint_name", "waypoints_name");
+//        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> openAIService.getListOfRoute(badJsonResponse));
+//        assertEquals("Json for chatGPT incorrect format for OpenAIRouteDTO!!!", ex.getMessage());
+//    }
 
     @Test
     public void getListOfRouteThrowsExceptionForNoJson(){

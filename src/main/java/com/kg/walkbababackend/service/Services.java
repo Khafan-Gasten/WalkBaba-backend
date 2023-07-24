@@ -4,7 +4,7 @@ import com.kg.walkbababackend.model.openai.DB.RouteInfo;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.RouteToFrontEndDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
-import com.kg.walkbababackend.model.openai.DTO.directionsApi.DirectionsResponseDTO;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.directionsApi.DirectionsResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -21,25 +21,23 @@ public class Services {
     @Autowired
     RepositoryService repoService;
 
-    public List<OpenAIRouteDTO> getRoutes(UserRequestDTO requestDTO) {
+    public List<RouteToFrontEndDTO> getRoutes(UserRequestDTO requestDTO) {
         List<RouteInfo> routesFromDB = repoService.getRoutesFromDB(requestDTO);
         if (!routesFromDB.isEmpty()) {
-            List<OpenAIRouteDTO> routesReformat = routesFromDB.stream()
-                    .map(OpenAIRouteDTO::new)
+            List<RouteToFrontEndDTO> routesReformat = routesFromDB.stream()
+                    .map(RouteToFrontEndDTO::new)
                     .collect(Collectors.toList());
             return addCityAndCountryDetails(routesReformat, requestDTO);
         }
         List<OpenAIRouteDTO> routes = openAIService.getOpenAIResponse(requestDTO);
-        List<DirectionsResponseDTO> routesToRender = googleApiService.getRoutesToRender(routes, requestDTO);
-        RouteToFrontEndDTO routeToFrontEndDTO = new RouteToFrontEndDTO(routes, routesToRender);
-        //Call unsplash or (google maps image api?) to add images to the routes (all the waypoints and the route).
-        //repoService.saveRoute(routes, requestDTO);
-        return addCityAndCountryDetails(routes, requestDTO);
+        List<RouteToFrontEndDTO> routesToRender = googleApiService.getRoutesToRender(routes, requestDTO);
+        repoService.saveRoute(routesToRender);
+        return addCityAndCountryDetails(routesToRender, requestDTO);
     }
 
-    public List<OpenAIRouteDTO> addCityAndCountryDetails(List<OpenAIRouteDTO> openAIRouteDTOList, UserRequestDTO requestDTO) {
-        openAIRouteDTOList.forEach(route -> route.waypoints()
+    public List<RouteToFrontEndDTO> addCityAndCountryDetails(List<RouteToFrontEndDTO> routeToFrontEndDTOList, UserRequestDTO requestDTO) {
+        routeToFrontEndDTOList.forEach(route -> route.waypoints()
                 .replaceAll(waypoint -> waypoint.withCityAndCountry(waypoint.name(), requestDTO.city(), requestDTO.country())));
-        return openAIRouteDTOList;
+        return routeToFrontEndDTOList;
     }
 }

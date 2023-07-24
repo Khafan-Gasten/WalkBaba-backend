@@ -31,14 +31,14 @@ public class OpenAIService {
 
     private static final String CHATGPT_PROMPT_TEMPLATE =
          "Can you give me walking tour routes with the below details:\n" +
-                 "- in the city of Rotterdam, Netherlands\n" +
+                 "- in the city of %s, %s\n" +
                  "- contain highlights saved as waypoints\n" +
                  "- each waypoint should have a short description\n" +
                  "- the routes should be of varying lengths\n" +
                  "- the response should be in these 6 theme : Nature, Architecture, Food, Culture, Top Highlights, Family fun\n" +
                  "-  recommend as much as you can\n" +
-                 "- Give the response as one Json object. It should have  \"walk_name\",\"city\",\"country\", \"description\", \"waypoints\", " +
-                 "\"theme\", \"waypoints\" as key and \"waypoints\" should include the keys \"waypoint_name\" and \"description\"." +
+                 "- Give the response as one Json object. It should have  \"walk_name\", \"description\", \"waypoints\", " +
+                 "\"theme\", as keys and \"waypoints\" should include the keys \"waypoint_name\" and \"description\"." +
                  "This is very important do this." ;
     public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO) {
         String response = chat(String.format(CHATGPT_PROMPT_TEMPLATE, requestDTO.city(), requestDTO.country()));
@@ -48,6 +48,7 @@ public class OpenAIService {
     public List<OpenAIRouteDTO> getListOfRoute(String response) {
         try {
             System.out.println( "gpt response*********\n " + response);
+            //response = "[" + response + "]";
             response = response.substring(response.indexOf("["), response.lastIndexOf("]") + 1);
             System.out.println("Maboo's bullshit\n"+response);
             ObjectMapper mapper = new ObjectMapper();

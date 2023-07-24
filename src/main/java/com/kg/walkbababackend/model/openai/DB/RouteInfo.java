@@ -2,6 +2,7 @@ package com.kg.walkbababackend.model.openai.DB;
 
 
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
+import com.kg.walkbababackend.model.openai.DTO.RouteToFrontEndDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
 import jakarta.persistence.*;
 
@@ -19,21 +20,26 @@ public class RouteInfo {
     private String country;
     private String routeName;
     private String routeDescription;
-    private  String theme ;
-    private  Long distance;
+    private String theme ;
+    private Long distance;
     private Long durationInMin ;
     private Long likes ;
     private Long dislike ;
     @OneToMany(cascade = CascadeType.ALL)
     private List<WaypointInfo> waypoints;
 
-    public RouteInfo(UserRequestDTO userRequest, OpenAIRouteDTO openAIRouteDTO) {
-        this.city = userRequest.city();
-        this.country = userRequest.country();
-        this.routeName = openAIRouteDTO.name();
-        this.routeDescription = openAIRouteDTO.description();
-        this.waypoints = openAIRouteDTO.waypoints().stream()
-                .map(waypoint -> new WaypointInfo(waypoint))
+    public RouteInfo(RouteToFrontEndDTO routeToFrontEndDTO) {
+        this.city = routeToFrontEndDTO.city();
+        this.country = routeToFrontEndDTO.country();
+        this.routeName = routeToFrontEndDTO.name();
+        this.routeDescription = routeToFrontEndDTO.description();
+        this.theme = routeToFrontEndDTO.theme();
+        this.distance = routeToFrontEndDTO.distance();
+        this.durationInMin = routeToFrontEndDTO.durationInMin();
+        this.dislike = routeToFrontEndDTO.dislike();
+        this.likes = routeToFrontEndDTO.like();
+        this.waypoints = routeToFrontEndDTO.waypoints().stream()
+                .map(WaypointInfo::new)
                 .toList();
     }
 
