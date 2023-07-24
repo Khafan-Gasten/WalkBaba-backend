@@ -15,14 +15,16 @@ public class WaypointInfo {
     private String waypointName;
     private String waypointDescription;
 
-    @ElementCollection
-    @Column(length = 1000)
-    private List<String> imageLink;
+//    @ElementCollection
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ImageLink> imageLink;
 
     public WaypointInfo(WaypointDTO waypoints) {
         this.waypointName = waypoints.name();
         this.waypointDescription = waypoints.description();
-        this.imageLink = waypoints.imageLink();
+        this.imageLink = waypoints.imageLink().stream()
+                .map(ImageLink::new)
+                .toList();
     }
 
     public WaypointInfo() {
@@ -53,11 +55,11 @@ public class WaypointInfo {
         this.waypointDescription = waypointDescription;
     }
 
-    public List<String> getImageLink() {
+    public List<ImageLink> getImageLink() {
         return imageLink;
     }
 
-    public void setImageLink(List<String> imageLink) {
-        this.imageLink = imageLink;
-    }
+//    public void setImageLink(List<String> imageLink) {
+//        this.imageLink = imageLink;
+//    }
 }

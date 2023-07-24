@@ -12,7 +12,6 @@ public class UserRepository {
     @Autowired
     JpaUserRepository repo;
 
-
     public UserInfo getUserByUserName(String userName) {
         return repo.findByUserName(userName);
     }

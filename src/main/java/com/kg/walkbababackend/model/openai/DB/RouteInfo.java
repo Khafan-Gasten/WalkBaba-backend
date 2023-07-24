@@ -25,7 +25,7 @@ public class RouteInfo {
     private Long durationInMin ;
     private Long likes ;
     private Long dislike ;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<WaypointInfo> waypoints;
 
     public RouteInfo(RouteToFrontEndDTO routeToFrontEndDTO) {

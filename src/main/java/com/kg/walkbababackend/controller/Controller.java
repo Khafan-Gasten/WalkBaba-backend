@@ -31,13 +31,11 @@ public class Controller {
 
     @PostMapping(value = "/createUser")
     public ResponseEntity<UserInfo> postSaveRoute(@RequestBody UserDTO userDTO){
-
         return ResponseEntity.ok(services.createUser(userDTO.userName(), userDTO.password()));
     }
 
     @PostMapping(value = "/saveroute")
     public ResponseEntity<RouteToFrontEndDTO> postSaveRoute(@RequestBody SaveRouteRequestDTO saveRouteRequest){
-
         System.out.println("in post route");
         return ResponseEntity.ok(services.setUserSaveRoute(saveRouteRequest));
     }

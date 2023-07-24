@@ -33,7 +33,7 @@ public class RepositoryService {
 
     public RouteToFrontEndDTO setUserSaveRoute(long userId, long routeId) {
         RouteInfo routeInfo = routeRepo.getRouteById(routeId);
-        List<RouteInfo> routeInfos = userRepo.getSavedRoute(userId);
+        List<RouteInfo> routeInfos = userRepo.getUserById(userId).getSaveRoute();
         routeInfos.add(routeInfo);
         return new RouteToFrontEndDTO(routeInfo);
     }
@@ -42,7 +42,6 @@ public class RepositoryService {
         return userRepo.getSavedRoute(userId).stream()
                 .map(routeInfo -> new RouteToFrontEndDTO(routeInfo))
                 .toList();
-
     }
 
     public UserInfo createUser(String userName, String password) {
