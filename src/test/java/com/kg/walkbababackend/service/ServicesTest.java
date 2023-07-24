@@ -23,8 +23,8 @@ class ServicesTest {
     @Test
     void setUserSaveRouteShouldSaveCorrectlyForSpecificUser() {
 //        UserInfo userInfo = services.createUser("Max", "13642");
-        SaveRouteRequestDTO saveRouteRequestDTO = new SaveRouteRequestDTO(1, 1);
+        SaveRouteRequestDTO saveRouteRequestDTO = new SaveRouteRequestDTO(1, 3);
         RouteToFrontEndDTO routeToFrontEndDTO = services.setUserSaveRoute(saveRouteRequestDTO);
-        assertEquals(routeToFrontEndDTO.routeId(), 1);
+        assertEquals(routeToFrontEndDTO.routeId(), 3);
     }
 }
