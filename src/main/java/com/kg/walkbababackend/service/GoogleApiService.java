@@ -60,8 +60,16 @@ public class GoogleApiService {
         ExportLinkDTO exportLinks = urlBuilders(requestUrl, reverseRequestUrl);
 
         DirectionsResponseDTO directions = callDirectionsApi(requestUrl);
-        Double totalDist = calculateDistance(directions.routes().get(0).legs);
-        Long totalDur = calculateDuration(directions.routes().get(0).legs);
+
+        Double totalDist;
+        Long totalDur;
+        if (directions.routes().isEmpty()) {
+            totalDist = 0.0;
+            totalDur = 0L;
+        } else {
+            totalDist = calculateDistance(directions.routes().get(0).legs);
+            totalDur = calculateDuration(directions.routes().get(0).legs);
+        }
         List<List<String>> imageUrls = directions.geocodedWaypointList().stream()
                 .map(waypoint -> getPlaceImageUrl(waypoint.place_id))
                 .toList();
@@ -75,9 +83,8 @@ public class GoogleApiService {
 
     private String startExportMapsUrlBuilder(String exportLink) {
         String startingPointUrl = exportLink.split("&origin=")[1].split("&destination=")[0];
-        String mapToStartingPoint = exportLink.replace("&origin=" + startingPointUrl,"")
+        return exportLink.replace("&origin=" + startingPointUrl,"")
                 .replace("&waypoints=", ("&waypoints=" + startingPointUrl));
-        return mapToStartingPoint;
     }
 
     public double calculateDistance(List<Leg> legs) {
@@ -85,7 +92,7 @@ public class GoogleApiService {
     }
 
     public long calculateDuration(List<Leg> legs) {
-        return ((legs.stream().mapToInt(leg -> leg.duration.value).sum()))/60;
+        return ((legs.get(0).duration.value))/60;
     }
 
     public DirectionsResponseDTO callDirectionsApi(String requestUrl) {
