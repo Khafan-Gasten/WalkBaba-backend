@@ -419,7 +419,7 @@ class GoogleApiServiceTest {
 
     @Test
     public void routeFetcherReturnsARoute() {
-        DirectionsResponseDTO directionsResponseDTO = googleApiService.callDirectionsApi(route, requestDTO, EDINBURGH_RESPONSE_URL);
+        DirectionsResponseDTO directionsResponseDTO = googleApiService.callDirectionsApi(EDINBURGH_RESPONSE_URL);
         System.out.println(directionsResponseDTO);
         System.out.println(directionsResponseDTO.geocodedWaypointList());
         assertNotNull(directionsResponseDTO);

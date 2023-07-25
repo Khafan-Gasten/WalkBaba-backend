@@ -59,9 +59,9 @@ public class GoogleApiService {
         String reverseRequestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO, true);
         ExportLinkDTO exportLinks = urlBuilders(requestUrl, reverseRequestUrl);
 
-        DirectionsResponseDTO directions = callDirectionsApi(routeDTO, requestDTO, requestUrl);
+        DirectionsResponseDTO directions = callDirectionsApi(requestUrl);
         Double totalDist = calculateDistance(directions.routes().get(0).legs);
-        Long totalDur = calculateDuration(directions.routes().get(0).legs);     //Why is it get 0?
+        Long totalDur = calculateDuration(directions.routes().get(0).legs);
         List<List<String>> imageUrls = directions.geocodedWaypointList().stream()
                 .map(waypoint -> getPlaceImageUrl(waypoint.place_id))
                 .toList();
@@ -81,14 +81,14 @@ public class GoogleApiService {
     }
 
     public double calculateDistance(List<Leg> legs) {
-        return Math.round(((double) (legs.stream().mapToInt(leg -> leg.distance.value).sum()))/100)/10; //Need to be careful with rounding
+        return Math.round(((legs.stream().mapToDouble(leg -> leg.distance.value).sum()))/100)/10; //Need to be careful with rounding
     }
 
     public long calculateDuration(List<Leg> legs) {
         return  ((long) (((legs.stream().mapToInt(leg -> leg.duration.value).sum()))/60));
     }
 
-    public DirectionsResponseDTO callDirectionsApi(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO, String requestUrl) {
+    public DirectionsResponseDTO callDirectionsApi(String requestUrl) {
         URI builtURI = URI.create(requestUrl);
         System.out.println("URI: " + builtURI);
         DirectionsResponseDTO response = restTemplate.getForObject(builtURI, DirectionsResponseDTO.class);
@@ -107,18 +107,22 @@ public class GoogleApiService {
 
     public String directionApiUrlRequestBuilder(OpenAIRouteDTO route, UserRequestDTO requestDTO, Boolean reverseWaypoints) {
         List<WaypointDTO> waypointsDTOList = route.waypoints();
-        List<String> waypointsList = new ArrayList<>();
+        List<WaypointDTO> waypointDTOListToUse;
 
         if (reverseWaypoints == true){
-            Collections.reverse(waypointsDTOList);
+            List<WaypointDTO> reversedDTOList = new ArrayList<>(waypointsDTOList);
+            waypointDTOListToUse = reversedDTOList;
+        } else {
+            waypointDTOListToUse = waypointsDTOList;
         }
 
-        for (int i = 0; i < waypointsDTOList.size(); i++) {
-            if (i == 0 || i == waypointsDTOList.size()-1) {
-                waypointsList.add(addCityAndCountryDetails(waypointsDTOList.get(i).name(), requestDTO, false));
+        List<String> waypointsList = new ArrayList<>();
+        for (int i = 0; i < waypointDTOListToUse.size(); i++) {
+            if (i == 0 || i == waypointDTOListToUse.size()-1) {
+                waypointsList.add(addCityAndCountryDetails(waypointDTOListToUse.get(i).name(), requestDTO, false));
                 continue;
             }
-            waypointsList.add(addCityAndCountryDetails(waypointsDTOList.get(i).name(), requestDTO, true));
+            waypointsList.add(addCityAndCountryDetails(waypointDTOListToUse.get(i).name(), requestDTO, true));
         }
 
         String origin = waypointsList.remove(0);
@@ -171,7 +175,7 @@ public class GoogleApiService {
         }
         return responseDTO.result().photos()
                 .stream()
-                .limit(5)
+                .limit(7)
                 .map(photo -> String.format("%s/place/photo" +
                         "?maxwidth=%d" +
                         "&photo_reference=%s" +
