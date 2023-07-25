@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
+                                 @JsonProperty("route_id") long routeId,
                                  String city,
                                  String country,
                                  String description,
@@ -24,6 +25,7 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                                  @JsonProperty("waypoints") List<WaypointDTO> waypoints) {
     public RouteToFrontEndDTO(RouteInfo routeInfo) {
         this(routeInfo.getRouteName(),
+                routeInfo.getRouteId(),
                 routeInfo.getCity(),
                 routeInfo.getCountry(),
                 routeInfo.getRouteDescription(),
@@ -45,6 +47,7 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                           ExportLinkDTO exportLinks,
                           List<WaypointDTO> waypoints) {
         this(openAIRouteDTO.name(),
+                0L,
                 userRequestDTO.city(),
                 userRequestDTO.country(),
                 openAIRouteDTO.description(),

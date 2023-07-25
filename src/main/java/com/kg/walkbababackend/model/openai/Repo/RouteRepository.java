@@ -20,4 +20,8 @@ public class RouteRepository{
     public List<RouteInfo> getRoutesFromDB(UserRequestDTO userRequest) {
         return repo.findByCityAndCountry(userRequest.city(), userRequest.country());
     }
+
+    public RouteInfo getRouteById(long routeId) {
+        return repo.findById(routeId).orElse(null);
+    }
 }
