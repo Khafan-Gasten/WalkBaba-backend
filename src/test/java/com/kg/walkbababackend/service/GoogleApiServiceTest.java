@@ -410,6 +410,14 @@ class GoogleApiServiceTest {
     }
 
     @Test
+    public void urlBuilderReversesWaypoints() {
+        String url = googleApiService.directionApiUrlRequestBuilder(route, requestDTO, true);
+        System.out.println(url);
+        assert(url.length() > 0);
+        assertNotEquals(EDINBURGH_RESPONSE_URL, url);
+    }
+
+    @Test
     public void exportUrlBuilderReturnsCorrectUrl() {
         String url = googleApiService.exportMapsUrlBuilder(EDINBURGH_RESPONSE_URL);
         System.out.println(url);
@@ -419,7 +427,7 @@ class GoogleApiServiceTest {
 
     @Test
     public void routeFetcherReturnsARoute() {
-        DirectionsResponseDTO directionsResponseDTO = googleApiService.callDirectionsApi(route, requestDTO, EDINBURGH_RESPONSE_URL);
+        DirectionsResponseDTO directionsResponseDTO = googleApiService.callDirectionsApi(EDINBURGH_RESPONSE_URL);
         System.out.println(directionsResponseDTO);
         System.out.println(directionsResponseDTO.geocodedWaypointList());
         assertNotNull(directionsResponseDTO);
