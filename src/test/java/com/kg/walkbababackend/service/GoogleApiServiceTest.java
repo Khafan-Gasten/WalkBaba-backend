@@ -138,123 +138,7 @@ class GoogleApiServiceTest {
                 }
               ]
             }
-            Maboo's bullshit
-            [
-                {
-                  "walk_name": "Rhein River Promenade",
-                  "description": "Enjoy a leisurely walk along the iconic Rhein River and take in the stunning views of the city.",
-                  "waypoints": [
-                    {
-                      "waypoint_name": "Hohenzollern Bridge",
-                      "description": "One of Cologne's most famous landmarks, offering panoramic views of the river and the Cologne Cathedral."
-                    },
-                    {
-                      "waypoint_name": "Rheingarten",
-                      "description": "A beautiful riverside park with colorful flower beds, relaxing benches, and a peaceful atmosphere."
-                    },
-                    {
-                      "waypoint_name": "Tanzbrunnen",
-                      "description": "An open-air concert venue surrounded by lush greenery and located right on the riverbank."
-                    }
-                  ],
-                  "theme": "Nature"
-                },
-                {
-                  "walk_name": "Architectural Marvels",
-                  "description": "Explore Cologne's remarkable architecture, spanning from ancient Roman structures to modern masterpieces.",
-                  "waypoints": [
-                    {
-                      "waypoint_name": "Cologne Cathedral",
-                      "description": "A UNESCO World Heritage Site and Germany's most visited landmark, boasting incredible Gothic architecture and stunning stained glass windows."
-                    },
-                    {
-                      "waypoint_name": "Cologne City Hall",
-                      "description": "A magnificent example of historic architecture, showcasing an impressive Renaissance facade and beautiful interior decorations."
-                    },
-                    {
-                      "waypoint_name": "Lanxess Arena",
-                      "description": "One of the largest and most modern multi-purpose arenas in Europe, hosting various events and concerts throughout the year."
-                    }
-                  ],
-                  "theme": "Architecture"
-                },
-                {
-                  "walk_name": "Culinary Delights",
-                  "description": "Embark on a gastronomic journey through the vibrant food scene of Cologne, treating your taste buds to delicious local specialties.",
-                  "waypoints": [
-                    {
-                      "waypoint_name": "Elsässer Straße",
-                      "description": "A lively street filled with traditional beer gardens, cozy cafes, and eateries serving mouthwatering German dishes."
-                    },
-                    {
-                      "waypoint_name": "Cologne Chocolate Museum",
-                      "description": "Discover the fascinating world of chocolate, learn about its history, and indulge in sweet treats at the museum's cafe."
-                    },
-                    {
-                      "waypoint_name": "Brauhaus Früh am Dom",
-                      "description": "A famous brewery and restaurant offering traditional Cologne cuisine. Don't miss trying the local Kölsch beer."
-                    }
-                  ],
-                  "theme": "Food"
-                },
-                {
-                  "walk_name": "Cultural Treasures",
-                  "description": "Immerse yourself in Cologne's rich cultural heritage and explore its museums, galleries, and historical attractions.",
-                  "waypoints": [
-                    {
-                      "waypoint_name": "Museum Ludwig",
-                      "description": "A renowned museum featuring an impressive collection of modern art, including works by Picasso, Warhol, and Lichtenstein."
-                    },
-                    {
-                      "waypoint_name": "Romano-Germanic Museum",
-                      "description": "Discover ancient Roman artifacts, including the famous Dionysus mosaic, in this archaeological museum."
-                    },
-                    {
-                      "waypoint_name": "Hänneschen-Theater",
-                      "description": "Enjoy a traditional puppet theater show featuring beloved characters and humorous stories from Cologne's folklore."
-                    }
-                  ],
-                  "theme": "Culture"
-                },
-                {
-                  "walk_name": "Top Cologne Highlights",
-                  "description": "Experience the must-see sights of Cologne, covering its iconic landmarks and most beloved attractions.",
-                  "waypoints": [
-                    {
-                      "waypoint_name": "Kölner Dom",
-                      "description": "The Cologne Cathedral, a masterpiece of Gothic architecture and the symbol of the city."
-                    },
-                    {
-                      "waypoint_name": "Cologne Old Town",
-                      "description": "Wander through the charming narrow streets, admire colorful historic buildings, and visit quaint shops and cafes."
-                    },
-                    {
-                      "waypoint_name": "Hohenzollern Bridge",
-                      "description": "Capture breathtaking views of the cathedral and the city skyline from this famous bridge."
-                    }
-                  ],
-                  "theme": "Top Highlights"
-                },
-                {
-                  "walk_name": "Family Fun in Cologne",
-                  "description": "Enjoy a fun-filled day with your family, exploring attractions and activities suitable for all ages.",
-                  "waypoints": [
-                    {
-                      "waypoint_name": "Cologne Zoo",
-                      "description": "Home to over 10,000 animals, including elephants, giraffes, and big cats. Don't miss the aquarium and monkey house."
-                    },
-                    {
-                      "waypoint_name": "Odysseum",
-                      "description": "A science adventure museum offering interactive exhibits, educational displays, and hands-on experiments for children."
-                    },
-                    {
-                      "waypoint_name": "Rheinpark",
-                      "description": "A large park with playgrounds, picnic areas, and mini-golf, perfect for a family outdoor activity or a relaxing stroll."
-                    }
-                  ],
-                  "theme": "Family Fun"
-                }
-              ]
+           
             """;
     String rotterdam_Gpt_Response = """
     [
@@ -441,7 +325,7 @@ class GoogleApiServiceTest {
     }
 
     @Test
-    public void getOneRouteShouldReturnCorrectDTO(){
+    public void getOneRouteShouldReturnCorrectDTORotterdam(){
         UserRequestDTO rDamRequestDTO= new UserRequestDTO("Netherlands", "Rotterdam", "1", null, null);
         List<OpenAIRouteDTO> openAIRouteDTOS = openAIService.getListOfRoute(rotterdam_Gpt_Response);
         OpenAIRouteDTO route1 = openAIRouteDTOS.get(0);
@@ -460,7 +344,26 @@ class GoogleApiServiceTest {
     }
 
     @Test
-    public void getRoutesToRenderShouldReturnCorrectDTO(){
+    public void getOneRouteShouldReturnCorrectDTOCologne(){
+        UserRequestDTO cologneRequestDTO = new UserRequestDTO("Germany", "Cologne", "1", null, null);
+        List<OpenAIRouteDTO> openAIRouteDTOS = openAIService.getListOfRoute(cologne_Gpt_Response);
+        OpenAIRouteDTO route1 = openAIRouteDTOS.get(0);
+        System.out.println(route1.name());
+        System.out.println(route1.theme());
+        RouteToFrontEndDTO routeToFrontEndDTO = googleApiService.getOneRoute(route1, cologneRequestDTO);
+        assertNotNull(routeToFrontEndDTO);
+        assertNotNull(routeToFrontEndDTO.distance());
+        assertNotNull(routeToFrontEndDTO.durationInMin());
+        assertEquals("Rhein River Promenade", routeToFrontEndDTO.name());
+        assertEquals("Germany", routeToFrontEndDTO.country());
+        assertEquals("Cologne", routeToFrontEndDTO.city());
+        assertEquals("Enjoy a leisurely walk along the iconic Rhein River and take in the stunning views of the city.", routeToFrontEndDTO.description());
+        assertNotNull(routeToFrontEndDTO.waypoints());
+        assert(routeToFrontEndDTO.waypoints().get(0).imageLink().get(0).length()>0);
+    }
+
+    @Test
+    public void getRoutesToRenderShouldReturnCorrectDTOSRotterdam(){
         UserRequestDTO rDamRequestDTO= new UserRequestDTO("Netherlands", "Rotterdam", "1", null, null);
         List<OpenAIRouteDTO> openAIRouteDTOS = openAIService.getListOfRoute(rotterdam_Gpt_Response);
         List<RouteToFrontEndDTO> routeToFrontEndDTOS = googleApiService.getRoutesToRender(openAIRouteDTOS, rDamRequestDTO);
@@ -471,6 +374,22 @@ class GoogleApiServiceTest {
         assertEquals("Netherlands", routeToFrontEndDTOS.get(2).country());
         assertEquals("Rotterdam", routeToFrontEndDTOS.get(3).city());
         assertEquals("Explore the natural beauty of Rotterdam while visiting its top natural attractions.", routeToFrontEndDTOS.get(0).description());
+        assertNotNull(routeToFrontEndDTOS.get(2).waypoints());
+        assert(routeToFrontEndDTOS.get(1).waypoints().get(0).imageLink().get(0).length()>0);
+    }
+
+    @Test
+    public void getRoutesToRenderShouldReturnCorrectDTOSCologne(){
+        UserRequestDTO cologneRequestDTO = new UserRequestDTO("Germany", "Cologne", "1", null, null);
+        List<OpenAIRouteDTO> openAIRouteDTOS = openAIService.getListOfRoute(cologne_Gpt_Response);
+        List<RouteToFrontEndDTO> routeToFrontEndDTOS = googleApiService.getRoutesToRender(openAIRouteDTOS, cologneRequestDTO);
+        assertNotNull(routeToFrontEndDTOS);
+        assertNotNull(routeToFrontEndDTOS.get(1).distance());
+        assertNotNull(routeToFrontEndDTOS.get(2).durationInMin());
+        assertEquals("Culinary Delights", routeToFrontEndDTOS.get(1).name());
+        assertEquals("Germany", routeToFrontEndDTOS.get(2).country());
+        assertEquals("Cologne", routeToFrontEndDTOS.get(0).city());
+        assertEquals("Enjoy a leisurely walk along the iconic Rhein River and take in the stunning views of the city.", routeToFrontEndDTOS.get(0).description());
         assertNotNull(routeToFrontEndDTOS.get(2).waypoints());
         assert(routeToFrontEndDTOS.get(1).waypoints().get(0).imageLink().get(0).length()>0);
     }
