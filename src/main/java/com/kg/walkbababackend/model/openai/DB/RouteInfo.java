@@ -1,6 +1,7 @@
 package com.kg.walkbababackend.model.openai.DB;
 
 
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.ExportLinkDTO;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.RouteToFrontEndDTO;
 import com.kg.walkbababackend.model.openai.DTO.UserRequestDTO;
@@ -21,12 +22,12 @@ public class RouteInfo {
     private String routeName;
     private String routeDescription;
     private String theme ;
-    private Long distance;
+    private Double distance;
     private Long durationInMin ;
     private Long likes ;
     private Long dislike;
-    @Column(name="export_link", length=1000)
-    private String exportLink;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private ExportLink exportLinks;
     @OneToMany(cascade = CascadeType.ALL)
     private List<WaypointInfo> waypoints;
 
@@ -40,7 +41,7 @@ public class RouteInfo {
         this.durationInMin = routeToFrontEndDTO.durationInMin();
         this.dislike = routeToFrontEndDTO.dislike();
         this.likes = routeToFrontEndDTO.like();
-        this.exportLink = routeToFrontEndDTO.exportLink();
+        this.exportLinks = new ExportLink(routeToFrontEndDTO.exportLinks());
         this.waypoints = routeToFrontEndDTO.waypoints().stream()
                 .map(WaypointInfo::new)
                 .toList();
@@ -105,11 +106,11 @@ public class RouteInfo {
         this.theme = theme;
     }
 
-    public Long getDistance() {
+    public Double getDistance() {
         return distance;
     }
 
-    public void setDistance(Long distance) {
+    public void setDistance(Double distance) {
         this.distance = distance;
     }
 
@@ -137,11 +138,11 @@ public class RouteInfo {
         this.dislike = dislike;
     }
 
-    public String getExportLink() {
-        return exportLink;
+    public ExportLink getExportLink() {
+        return exportLinks;
     }
 
-    public void setExportLink(String exportLink) {
-        this.exportLink = exportLink;
+    public void setExportLink(ExportLink exportLinks) {
+        this.exportLinks = exportLinks;
     }
 }
