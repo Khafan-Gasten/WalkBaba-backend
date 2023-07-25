@@ -81,11 +81,11 @@ public class GoogleApiService {
     }
 
     public double calculateDistance(List<Leg> legs) {
-        return Math.round(((legs.stream().mapToDouble(leg -> leg.distance.value).sum()))/100)/10; //Need to be careful with rounding
+        return ((double) Math.round((double) (((legs.get(0).distance.value)))/100))/10;
     }
 
     public long calculateDuration(List<Leg> legs) {
-        return  ((long) (((legs.stream().mapToInt(leg -> leg.duration.value).sum()))/60));
+        return ((legs.stream().mapToInt(leg -> leg.duration.value).sum()))/60;
     }
 
     public DirectionsResponseDTO callDirectionsApi(String requestUrl) {
@@ -178,7 +178,7 @@ public class GoogleApiService {
                 .stream()
                 .limit(7)
                 .map(photo -> String.format("%s/place/photo" +
-                        "?maxwidth=%d" +
+                        "?maxwidth=%s" +
                         "&photo_reference=%s" +
                         "&key=%s",GOOGLE_API_URL_BASE, imageMaxWidth, photo.photoReference(), GOOGLE_MAPS_API_KEY)).toList();
     }
