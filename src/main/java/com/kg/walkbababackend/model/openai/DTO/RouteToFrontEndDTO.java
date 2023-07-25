@@ -3,6 +3,7 @@ package com.kg.walkbababackend.model.openai.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kg.walkbababackend.model.openai.DB.RouteInfo;
+import com.kg.walkbababackend.model.openai.DTO.MapsApi.ExportLinkDTO;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.OpenAIRouteDTO;
 import com.kg.walkbababackend.model.openai.DTO.OpenAi.WaypointDTO;
 
@@ -16,10 +17,11 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                                  String country,
                                  String description,
                                  String theme,
-                                 Long distance,
+                                 Double distance,
                                  Long durationInMin,
                                  Long like,
                                  Long dislike,
+                                 ExportLinkDTO exportLinks,
                                  @JsonProperty("waypoints") List<WaypointDTO> waypoints) {
     public RouteToFrontEndDTO(RouteInfo routeInfo) {
         this(routeInfo.getRouteName(),
@@ -32,6 +34,7 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                 routeInfo.getDurationInMin(),
                 routeInfo.getLikes(),
                 routeInfo.getDislike(),
+                new ExportLinkDTO(routeInfo.getExportLink()),
                 routeInfo.getWaypoints().stream()
                         .map(waypoint -> new WaypointDTO(waypoint))
                         .collect(Collectors.toList()));
@@ -39,7 +42,9 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
 
     public RouteToFrontEndDTO(OpenAIRouteDTO openAIRouteDTO,
                           UserRequestDTO userRequestDTO,
-                          Long[] distanceAndDuration,
+                          Double totalDist,
+                          Long totalDur,
+                          ExportLinkDTO exportLinks,
                           List<WaypointDTO> waypoints) {
         this(openAIRouteDTO.name(),
                 0L,
@@ -47,10 +52,11 @@ public record RouteToFrontEndDTO(@JsonProperty("walk_name") String name,
                 userRequestDTO.country(),
                 openAIRouteDTO.description(),
                 openAIRouteDTO.theme(),
-                distanceAndDuration[0],
-                distanceAndDuration[1],
+                totalDist,
+                totalDur,
                 0L,
                 0L,
+                exportLinks,
                 waypoints);
     }
 }
