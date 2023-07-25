@@ -410,6 +410,14 @@ class GoogleApiServiceTest {
     }
 
     @Test
+    public void urlBuilderReversesWaypoints() {
+        String url = googleApiService.directionApiUrlRequestBuilder(route, requestDTO, true);
+        System.out.println(url);
+        assert(url.length() > 0);
+        assertNotEquals(EDINBURGH_RESPONSE_URL, url);
+    }
+
+    @Test
     public void exportUrlBuilderReturnsCorrectUrl() {
         String url = googleApiService.exportMapsUrlBuilder(EDINBURGH_RESPONSE_URL);
         System.out.println(url);

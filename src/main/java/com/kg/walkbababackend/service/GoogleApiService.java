@@ -111,6 +111,7 @@ public class GoogleApiService {
 
         if (reverseWaypoints == true){
             List<WaypointDTO> reversedDTOList = new ArrayList<>(waypointsDTOList);
+            Collections.reverse(reversedDTOList);
             waypointDTOListToUse = reversedDTOList;
         } else {
             waypointDTOListToUse = waypointsDTOList;
