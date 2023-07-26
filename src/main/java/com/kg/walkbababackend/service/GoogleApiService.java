@@ -37,17 +37,17 @@ public class GoogleApiService {
     @Value("${googleMap.imageMaxWidth}")
     Long imageMaxWidth;
 
-    Long SHORTEST_WALK_TIME_MIN = 15L;
+    Long SHORTEST_WALK_TIME_MIN = 10L;
     Long LONGEST_WALK_TIME_MIN = 300L;
 
     public List<RouteToFrontEndDTO> getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
         return routes.stream()
                 .map(route -> getOneRoute(route, requestDTO))
-                .filter(route -> checkIfRouteIsValid(route.distance(), route.durationInMin()))
+                .filter(route -> checkIfRouteIsValid(route.durationInMin()))
                 .toList();
     }
 
-    public boolean checkIfRouteIsValid(Double distance, Long duration) {
+    public boolean checkIfRouteIsValid(Long duration) {
         return duration <= LONGEST_WALK_TIME_MIN && duration >= SHORTEST_WALK_TIME_MIN;
     }
 

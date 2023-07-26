@@ -31,6 +31,11 @@ public class RepositoryService {
         return routeRepo.getRoutesFromDB(requestDTO);
     }
 
+    public RouteToFrontEndDTO getRouteById(long routeId) {
+        RouteInfo routeInfo = routeRepo.getRouteById(routeId);
+        return new RouteToFrontEndDTO(routeInfo);
+    }
+
     public RouteToFrontEndDTO setUserSaveRoute(long userId, long routeId) {
         RouteInfo routeInfo = routeRepo.getRouteById(routeId);
         UserInfo userInfo = userRepo.getUserById(userId);
