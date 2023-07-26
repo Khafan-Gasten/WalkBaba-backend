@@ -29,7 +29,7 @@ public class RouteInfo {
     private Long dislike;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private ExportLink exportLinks;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<WaypointInfo> waypoints;
 
     public RouteInfo(RouteToFrontEndDTO routeToFrontEndDTO) {
