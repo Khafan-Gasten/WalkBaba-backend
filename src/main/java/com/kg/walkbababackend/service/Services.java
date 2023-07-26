@@ -39,6 +39,10 @@ public class Services {
         return addCityAndCountryDetails(routesToRender, requestDTO);
     }
 
+    public RouteToFrontEndDTO getRouteById(long routeId) {
+        return repoService.getRouteById(routeId);
+    }
+
     public List<RouteToFrontEndDTO> addCityAndCountryDetails(List<RouteToFrontEndDTO> routeToFrontEndDTOList, UserRequestDTO requestDTO) {
         routeToFrontEndDTOList.forEach(route -> route.waypoints()
                 .replaceAll(waypoint -> waypoint.withCityAndCountry(waypoint.name(), requestDTO.city(), requestDTO.country())));
