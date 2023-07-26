@@ -33,7 +33,7 @@ public class OpenAIService {
             "Please provide walking tour routes as a JSON object for the city of %s, %s. " +
                     "The JSON object should contain the following details: " +
                     "- Walking tour routes in 6 themes: Culture, Nature, Architecture, Food, Top Highlights, Family Fun. " +
-                    "- For each route, provide an enticing name and a detailed description of at least three sentences. Make it captivating with historical insights, local anecdotes, and must-visit landmarks." +
+                    "- For each route, provide a unique catchy name and a captivating detailed description of around 300 characters." +
                     "- Each route should also have a theme, and a list of at least 5 waypoints (highlights) with their names and descriptions. " +
                     "- Waypoint names should be searchable on Google. " +
                     "- The response should be in the format of one JSON object with the keys " +
