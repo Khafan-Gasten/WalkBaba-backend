@@ -20,6 +20,7 @@ public class RouteInfo {
     private String city;
     private String country;
     private String routeName;
+    @Column(length = 2000)
     private String routeDescription;
     private String theme ;
     private Double distance;
