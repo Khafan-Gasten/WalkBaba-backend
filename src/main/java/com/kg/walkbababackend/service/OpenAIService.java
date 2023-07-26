@@ -30,16 +30,16 @@ public class OpenAIService {
     private String apiUrl;
 
     private static final String CHATGPT_PROMPT_TEMPLATE =
-         "Can you give me walking tour routes with the below details:\n" +
-                 "- in the city of %s, %s\n" +
-                 "- contain highlights saved as waypoints\n" +
-                 "- each waypoint should have a short description\n" +
-                 "- the routes should be of varying lengths\n" +
-                 "- the response should be in these 6 theme : Nature, Architecture, Food, Culture, Top Highlights, Family fun\n" +
-                 "-  recommend as much as you can\n" +
-                 "- Give the response as one Json object. It should have  \"walk_name\", \"description\", \"waypoints\", " +
-                 "\"theme\", as keys and \"waypoints\" should include the keys \"waypoint_name\" and \"description\"." +
-                 "This is very important do this." ;
+            "Please provide walking tour routes as a JSON object for the city of %s, %s. " +
+                    "The JSON object should contain the following details: " +
+                    "- Walking tour routes in 6 themes: Culture, Nature, Architecture, Food, Top Highlights, Family Fun. " +
+                    "- For each route, provide an enticing name and a detailed description of at least three sentences. Make it captivating with historical insights, local anecdotes, and must-visit landmarks." +
+                    "- Each route should also have a theme, and a list of at least 5 waypoints (highlights) with their names and descriptions. " +
+                    "- Waypoint names should be searchable on Google. " +
+                    "- The response should be in the format of one JSON object with the keys " +
+                    "\"walking_tours,\" \"walk_name,\" \"description,\" \"theme,\" and \"waypoints.\" " +
+                    "The \"waypoints\" key should include the keys \"waypoint_name\" and \"description.\" ";
+
     public List<OpenAIRouteDTO> getOpenAIResponse(UserRequestDTO requestDTO) {
         String response = chat(String.format(CHATGPT_PROMPT_TEMPLATE, requestDTO.city(), requestDTO.country()));
         return getListOfRoute(response);

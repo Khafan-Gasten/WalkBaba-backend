@@ -13,6 +13,7 @@ public class WaypointInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long waypointID;
     private String waypointName;
+    @Column(length = 2000)
     private String waypointDescription;
 
 //    @ElementCollection
