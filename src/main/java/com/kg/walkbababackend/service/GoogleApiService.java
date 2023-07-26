@@ -37,10 +37,8 @@ public class GoogleApiService {
     @Value("${googleMap.imageMaxWidth}")
     Long imageMaxWidth;
 
-    Long SHORTEST_WALK_TIME_MIN = 20L;
+    Long SHORTEST_WALK_TIME_MIN = 15L;
     Long LONGEST_WALK_TIME_MIN = 300L;
-    Double SHORTEST_WALK_DIST_KM = 1.0;
-    Double LONGEST_WALK_DIST_KM = 12.0;
 
     public List<RouteToFrontEndDTO> getRoutesToRender(List<OpenAIRouteDTO> routes, UserRequestDTO requestDTO) {
         return routes.stream()
@@ -50,8 +48,7 @@ public class GoogleApiService {
     }
 
     public boolean checkIfRouteIsValid(Double distance, Long duration) {
-        return duration <= LONGEST_WALK_TIME_MIN && duration >= SHORTEST_WALK_TIME_MIN
-                && distance <= LONGEST_WALK_DIST_KM && distance >= SHORTEST_WALK_DIST_KM;
+        return duration <= LONGEST_WALK_TIME_MIN && duration >= SHORTEST_WALK_TIME_MIN;
     }
 
     public RouteToFrontEndDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
