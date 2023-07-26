@@ -19,6 +19,125 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class GoogleApiServiceTest {
 
+    String tehran_Gpt_Response = """
+            [
+                {
+                  "walk_name": "Nature Walk",
+                  "description": "Explore the natural beauty of Tehran",
+                  "waypoints": [
+                    {
+                      "waypoint_name": "Darakeh",
+                      "description": "A popular hiking spot at the foot of the Alborz Mountains"
+                    },
+                    {
+                      "waypoint_name": "Jamshidieh Park",
+                      "description": "A tranquil park known for its beautiful gardens and waterfalls"
+                    },
+                    {
+                      "waypoint_name": "Pardisan Park",
+                      "description": "One of the largest parks in Tehran, perfect for a leisurely walk"
+                    }
+                  ],
+                  "theme": "Nature"
+                },
+                {
+                  "walk_name": "Architectural Delights",
+                  "description": "Discover Tehran's architectural masterpieces",
+                  "waypoints": [
+                    {
+                      "waypoint_name": "Golestan Palace",
+                      "description": "A UNESCO World Heritage Site, showcasing exquisite Persian architecture"
+                    },
+                    {
+                      "waypoint_name": "Azadi Tower",
+                      "description": "An iconic symbol of Tehran, offering panoramic city views"
+                    },
+                    {
+                      "waypoint_name": "Milad Tower",
+                      "description": "One of the world's tallest towers, boasting modern design and a revolving restaurant"
+                    }
+                  ],
+                  "theme": "Architecture"
+                },
+                {
+                  "walk_name": "Tehran Food Trail",
+                  "description": "Indulge in Tehran's culinary delights",
+                  "waypoints": [
+                    {
+                      "waypoint_name": "Tajrish Bazaar",
+                      "description": "A bustling market offering a variety of fresh produce, spices, and local street food"
+                    },
+                    {
+                      "waypoint_name": "Darband",
+                      "description": "A vibrant area with numerous traditional restaurants serving delicious Persian cuisine"
+                    },
+                    {
+                      "waypoint_name": "Reyhan Restaurant",
+                      "description": "A popular eatery known for its authentic Iranian dishes and cozy ambiance"
+                    }
+                  ],
+                  "theme": "Food"
+                },
+                {
+                  "walk_name": "Cultural Exploration",
+                  "description": "Immerse yourself in Tehran's rich culture",
+                  "waypoints": [
+                    {
+                      "waypoint_name": "National Museum of Iran",
+                      "description": "Discover Iran's history through a vast collection of artifacts and artworks"
+                    },
+                    {
+                      "waypoint_name": "Tehran Grand Bazaar",
+                      "description": "An ancient market offering traditional crafts, spices, carpets, and more"
+                    },
+                    {
+                      "waypoint_name": "Niavaran Cultural Complex",
+                      "description": "A cultural hub featuring museums, galleries, and beautiful gardens"
+                    }
+                  ],
+                  "theme": "Culture"
+                },
+                {
+                  "walk_name": "Tehran Highlights",
+                  "description": "Experience the top attractions of Tehran",
+                  "waypoints": [
+                    {
+                      "waypoint_name": "Sa'dabad Complex",
+                      "description": "Former royal summer residence with magnificent palaces and museums"
+                    },
+                    {
+                      "waypoint_name": "The Treasury of National Jewels",
+                      "description": "An opulent collection of Persian jewelry, including the stunning Peacock Throne"
+                    },
+                    {
+                      "waypoint_name": "Tehran Contemporary Art Museum",
+                      "description": "A must-visit for art enthusiasts, showcasing modern Iranian artworks"
+                    }
+                  ],
+                  "theme": "Top Highlights"
+                },
+                {
+                  "walk_name": "Family Fun Walk",
+                  "description": "Enjoy Tehran with the whole family",
+                  "waypoints": [
+                    {
+                      "waypoint_name": "Mellat Park",
+                      "description": "A vast park offering playgrounds, paddle boats, and picnic areas"
+                    },
+                    {
+                      "waypoint_name": "Tehran Birds Garden",
+                      "description": "A bird-themed park with aviaries, a lake, and educational activities"
+                    },
+                    {
+                      "waypoint_name": "Museum of Miniature and Cinema",
+                      "description": "Fascinating museum displaying miniature models and movie props"
+                    }
+                  ],
+                  "theme": "Family fun"
+                }
+              ]
+            """;
+
     String cologne_Gpt_Response = """
             {
               "walks": [
@@ -392,5 +511,21 @@ class GoogleApiServiceTest {
         assertEquals("Enjoy a leisurely walk along the iconic Rhein River and take in the stunning views of the city.", routeToFrontEndDTOS.get(0).description());
         assertNotNull(routeToFrontEndDTOS.get(2).waypoints());
         assert(routeToFrontEndDTOS.get(1).waypoints().get(0).imageLink().get(0).length()>0);
+    }
+
+    @Test
+    public void getRoutesToRenderShouldReturnCorrectDTOSTehran(){
+        UserRequestDTO tehranRequestDTO = new UserRequestDTO("Iran", "Tehran", "1", null, null);
+        List<OpenAIRouteDTO> openAIRouteDTOS = openAIService.getListOfRoute(tehran_Gpt_Response);
+        List<RouteToFrontEndDTO> routeToFrontEndDTOS = googleApiService.getRoutesToRender(openAIRouteDTOS, tehranRequestDTO);
+        assertNotNull(routeToFrontEndDTOS);
+        assertNotNull(routeToFrontEndDTOS.get(1).distance());
+        assertNotNull(routeToFrontEndDTOS.get(2).durationInMin());
+        System.out.println(routeToFrontEndDTOS.get(1).name());
+        System.out.println(routeToFrontEndDTOS.get(2).country());
+        System.out.println(routeToFrontEndDTOS.get(0).city());
+        System.out.println(routeToFrontEndDTOS.get(3).description());
+        assertNotNull(routeToFrontEndDTOS.get(1).waypoints());
+//        assert(routeToFrontEndDTOS.get(1).waypoints().get(0).imageLink().get(0).length()>0);
     }
 }
