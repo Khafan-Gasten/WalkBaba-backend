@@ -47,7 +47,7 @@ public class Controller {
         return ResponseEntity.ok(services.getUserSavedRoute(userId));
     }
 
-    @GetMapping(value="/routes")
+    @GetMapping(value="/routes/map")
     public ResponseEntity<RouteToFrontEndDTO> getRouteById(@RequestParam long routeId) {
         return ResponseEntity.ok(services.getRouteById(routeId));
     }
