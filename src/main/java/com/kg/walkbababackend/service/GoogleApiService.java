@@ -57,17 +57,20 @@ public class GoogleApiService {
 
 
         DirectionsResponseDTO directions = callDirectionsApi(directionApiUrlRequestBuilderStopovers(requestUrl));
-        ExportLinkDTO exportLinks = urlBuilders(requestUrl, reverseRequestUrl, directions.routes().get(0).waypoint_order);
+        ExportLinkDTO exportLinks;
 
         Double totalDist;
         Long totalDur;
         if (directions.routes().isEmpty()) {
             totalDist = 0.0;
             totalDur = 0L;
+            exportLinks = new ExportLinkDTO("", "", "");
         } else {
             System.out.println("WAYPOINTS REARANGED: " + directions.routes().get(0).waypoint_order.toString());
             totalDist = calculateDistance(directions.routes().get(0).legs);
             totalDur = calculateDuration(directions.routes().get(0).legs);
+            exportLinks = urlBuilders(requestUrl, reverseRequestUrl, directions.routes().get(0).waypoint_order);
+
         }
         List<List<String>> imageUrls = directions.geocodedWaypointList().stream()
                 .map(waypoint -> getPlaceImageUrl(waypoint.place_id))
@@ -114,10 +117,10 @@ public class GoogleApiService {
     }
 
     public ExportLinkDTO urlBuilders(String requestUrl, String reverseRequestUrl, ArrayList<Object> waypointOrder) {
-        String reJiggedUrl = rearrangeUrl(requestUrl, waypointOrder);
-        String exportLink = exportMapsUrlBuilder(reJiggedUrl);
+        String[] reJiggedUrl = rearrangeUrl(requestUrl, waypointOrder);
+        String exportLink = exportMapsUrlBuilder(reJiggedUrl[0]);
         System.out.println(exportLink);
-        String flippedWaypointsUrl = exportMapsUrlBuilder(reverseRequestUrl);
+        String flippedWaypointsUrl = exportMapsUrlBuilder(reJiggedUrl[1]);
 
         String startExportLink = startExportMapsUrlBuilder(exportLink) ;
         String endExportLink = startExportMapsUrlBuilder(flippedWaypointsUrl);
@@ -125,12 +128,12 @@ public class GoogleApiService {
         return new ExportLinkDTO(exportLink, startExportLink, endExportLink);
     }
 
-    public String rearrangeUrl(String requestUrl, ArrayList<Object> waypointOrder) {
+    public String[] rearrangeUrl(String requestUrl, ArrayList<Object> waypointOrder) {
         System.out.println(requestUrl);
         String urlBase = requestUrl.split("origin=")[0]+ "origin=";
         String originalStartingPoint = requestUrl.split("origin=")[1].split("&destination=")[0];
         String originalDestPoint = requestUrl.split("&destination=")[1].split("&mode=")[0];
-        String[] originalWaypoints = requestUrl.split("&waypoints=optimize%3Atrue%7Cvia%3A")[1].split("&key")[0].split("7Cvia%3A");
+        String[] originalWaypoints = requestUrl.split("&waypoints=optimize%3Atrue%7Cvia%3A")[1].split("&key")[0].split("%7Cvia%3A");
         List<Integer> waypointOrderInt = waypointOrder.stream().map(object -> (Integer) object).toList();
         String toStartWaypointsString = "";
         for (int i=0; i < originalWaypoints.length; i++) {
@@ -153,7 +156,7 @@ public class GoogleApiService {
                         toEndWaypointsString +
                         "&key=" + requestUrl.split("&key")[1];
         System.out.println(toStartPointRearranged);
-        return toStartPointRearranged;
+        return new String[]{toStartPointRearranged, toEndPointRearranged};
 
     }
    // https://maps.googleapis.com/maps/api/directions/json?origin=Edinburgh%20Castle%2C%20Edinburgh%2C%20UK&destination=Palace%20of%20Holyroodhouse%2C%20Edinburgh%2C%20UK&mode=walking&waypoints=optimize%3Atrue%7Cvia%3ARoyal%20Mile%2CEdinburgh%2CUK%7Cvia%3ASt.%20Giles%20%20Cathedral%2CEdinburgh%2CUK&key=AIzaSyBmOpstO2144GQzwOWrWL9NQLvQ5oyE_kw
