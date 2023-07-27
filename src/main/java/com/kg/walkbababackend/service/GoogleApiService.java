@@ -54,9 +54,10 @@ public class GoogleApiService {
     public RouteToFrontEndDTO getOneRoute(OpenAIRouteDTO routeDTO, UserRequestDTO requestDTO) {
         String requestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO, false);
         String reverseRequestUrl = directionApiUrlRequestBuilder(routeDTO, requestDTO, true);
-        ExportLinkDTO exportLinks = urlBuilders(requestUrl, reverseRequestUrl);
 
-        DirectionsResponseDTO directions = callDirectionsApi(requestUrl);
+
+        DirectionsResponseDTO directions = callDirectionsApi(directionApiUrlRequestBuilderStopovers(requestUrl));
+        ExportLinkDTO exportLinks = urlBuilders(requestUrl, reverseRequestUrl, directions.routes().get(0).waypoint_order);
 
         Double totalDist;
         Long totalDur;
@@ -64,6 +65,7 @@ public class GoogleApiService {
             totalDist = 0.0;
             totalDur = 0L;
         } else {
+            System.out.println("WAYPOINTS REARANGED: " + directions.routes().get(0).waypoint_order.toString());
             totalDist = calculateDistance(directions.routes().get(0).legs);
             totalDur = calculateDuration(directions.routes().get(0).legs);
         }
@@ -71,11 +73,23 @@ public class GoogleApiService {
                 .map(waypoint -> getPlaceImageUrl(waypoint.place_id))
                 .toList();
         List<WaypointDTO> newWaypointDTOS = new ArrayList<>();
-        List<WaypointDTO> waypoints = routeDTO.waypoints();
-        for (int i = 0; i < waypoints.size(); i++) {
-            newWaypointDTOS.add(waypoints.get(i).withImageLink(imageUrls.get(i)));
+        List<WaypointDTO> reJigWaypoints = rearrangeWaypoints(routeDTO.waypoints(), directions.routes().get(0).waypoint_order);
+
+        for (int i = 0; i < reJigWaypoints.size(); i++) {
+            newWaypointDTOS.add(reJigWaypoints.get(i).withImageLink(imageUrls.get(i)));
         }
+//        List<WaypointDTO> rearrangedWaypointDTOS = rearrangeWaypoints(newWaypointDTOS, directions.routes().get(0).waypoint_order);
         return new RouteToFrontEndDTO(routeDTO, requestDTO, totalDist, totalDur, exportLinks, newWaypointDTOS);
+    }
+
+    private List<WaypointDTO> rearrangeWaypoints(List<WaypointDTO> newWaypointDTOS, ArrayList<Object> waypointOrder) {
+        List<WaypointDTO> rearrangedWaypointDTOS = new ArrayList<>();
+        rearrangedWaypointDTOS.add(newWaypointDTOS.get(0));
+        for (int i=0; i < waypointOrder.size(); i++) {
+            rearrangedWaypointDTOS.add(newWaypointDTOS.get(1+((Integer) waypointOrder.get(i))));
+        }
+        rearrangedWaypointDTOS.add(newWaypointDTOS.get(newWaypointDTOS.size()-1));
+        return rearrangedWaypointDTOS;
     }
 
     private String startExportMapsUrlBuilder(String exportLink) {
@@ -85,11 +99,11 @@ public class GoogleApiService {
     }
 
     public double calculateDistance(List<Leg> legs) {
-        return ((double) Math.round((double) (((legs.get(0).distance.value)))/100))/10;
+        return ((double) Math.round((((legs.stream().mapToDouble(leg -> leg.distance.value).sum())))/100))/10;
     }
 
     public long calculateDuration(List<Leg> legs) {
-        return ((legs.get(0).duration.value))/60;
+        return ((legs.stream().mapToInt(leg -> leg.distance.value).sum()))/60;
     }
 
     public DirectionsResponseDTO callDirectionsApi(String requestUrl) {
@@ -99,8 +113,10 @@ public class GoogleApiService {
         return response;
     }
 
-    public ExportLinkDTO urlBuilders(String requestUrl, String reverseRequestUrl) {
-        String exportLink = exportMapsUrlBuilder(requestUrl);
+    public ExportLinkDTO urlBuilders(String requestUrl, String reverseRequestUrl, ArrayList<Object> waypointOrder) {
+        String reJiggedUrl = rearrangeUrl(requestUrl, waypointOrder);
+        String exportLink = exportMapsUrlBuilder(reJiggedUrl);
+        System.out.println(exportLink);
         String flippedWaypointsUrl = exportMapsUrlBuilder(reverseRequestUrl);
 
         String startExportLink = startExportMapsUrlBuilder(exportLink) ;
@@ -108,6 +124,39 @@ public class GoogleApiService {
 
         return new ExportLinkDTO(exportLink, startExportLink, endExportLink);
     }
+
+    public String rearrangeUrl(String requestUrl, ArrayList<Object> waypointOrder) {
+        System.out.println(requestUrl);
+        String urlBase = requestUrl.split("origin=")[0]+ "origin=";
+        String originalStartingPoint = requestUrl.split("origin=")[1].split("&destination=")[0];
+        String originalDestPoint = requestUrl.split("&destination=")[1].split("&mode=")[0];
+        String[] originalWaypoints = requestUrl.split("&waypoints=optimize%3Atrue%7Cvia%3A")[1].split("&key")[0].split("7Cvia%3A");
+        List<Integer> waypointOrderInt = waypointOrder.stream().map(object -> (Integer) object).toList();
+        String toStartWaypointsString = "";
+        for (int i=0; i < originalWaypoints.length; i++) {
+            toStartWaypointsString += "%7Cvia%3A" + originalWaypoints[waypointOrderInt.get(i)];
+        }
+        String toEndWaypointsString = "";
+        for (int i=0; i < originalWaypoints.length; i++) {
+            toEndWaypointsString = "%7Cvia%3A" + originalWaypoints[waypointOrderInt.get(i)] +toEndWaypointsString;
+        }
+        String toStartPointRearranged =
+                urlBase +
+                originalStartingPoint + "&destination=" +
+                originalDestPoint + "&mode=walking&waypoints=optimize%3Atrue" +
+                toStartWaypointsString +
+                        "&key=" + requestUrl.split("&key")[1];
+        String toEndPointRearranged =
+                urlBase +
+                        originalDestPoint + "&destination=" +
+                        originalStartingPoint + "&mode=walking&waypoints=optimize%3Atrue" +
+                        toEndWaypointsString +
+                        "&key=" + requestUrl.split("&key")[1];
+        System.out.println(toStartPointRearranged);
+        return toStartPointRearranged;
+
+    }
+   // https://maps.googleapis.com/maps/api/directions/json?origin=Edinburgh%20Castle%2C%20Edinburgh%2C%20UK&destination=Palace%20of%20Holyroodhouse%2C%20Edinburgh%2C%20UK&mode=walking&waypoints=optimize%3Atrue%7Cvia%3ARoyal%20Mile%2CEdinburgh%2CUK%7Cvia%3ASt.%20Giles%20%20Cathedral%2CEdinburgh%2CUK&key=AIzaSyBmOpstO2144GQzwOWrWL9NQLvQ5oyE_kw
 
     public String directionApiUrlRequestBuilder(OpenAIRouteDTO route, UserRequestDTO requestDTO, Boolean reverseWaypoints) {
         List<WaypointDTO> waypointsDTOList = route.waypoints();
@@ -136,24 +185,27 @@ public class GoogleApiService {
         String waypointsJoined = String.join("", waypointsList);
         String waypoints = waypointsJoined.replaceFirst("[|]", "");
 
-        String optimize = "true";
         String mode = "walking";
 
         String requestUrl = GOOGLE_API_URL_BASE +
                 "/directions/json?" +
                 "origin=" + origin +
                 "&destination=" + destination +
-                "&optimize=" + optimize +
                 "&mode=" + mode +
-                "&waypoints=" + waypoints +
+                "&waypoints=optimize%3Atrue" + waypoints +
                 "&key=" + GOOGLE_MAPS_API_KEY;
 
         return requestUrl;
     }
 
+    public String directionApiUrlRequestBuilderStopovers(String requestUrl) {
+        return requestUrl.replaceAll("via%3A", "");
+    }
+
     public String exportMapsUrlBuilder(String mapsRequestApiUrl){
         String exportMapsUrl = mapsRequestApiUrl.replace(GOOGLE_API_URL_BASE + "/directions/json?", GOOGLE_MAPS_EXPORT_URL_BASE)
-               .replace("&optimize=true&mode=walking", "")
+               .replace("&mode=walking", "")
+                .replace("optimize%3Atrue", "")
                 .split("&key=")[0]
                 .concat("&travelmode=walking");
         return exportMapsUrl;
