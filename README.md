@@ -4,6 +4,20 @@ All backend code for WalkBaBa app
 
 WalkBaba is an app originally developed in just two weeks by KG, as a final project at Salt. Deployed link to follow!
 
+
+Future Work:
+
+- Bug fixes.
+- Thread ChatGpt requests.
+- Add lots of major cities to the database.
+- Reduce the number of google api calls:
+  - Improve code efficiency.
+  - Use some caching.
+- Reduce database costs. Maybe move to MongoDB.
+- Add adverts to page to cover some running costs.
+- Tidy code.
+- Sort out issues with Github actions space.
+
 WalkBaBa Description:
 
 Ever been in a new and exciting city and thought I’d love to take in these new surroundings on a relaxed, charming and picturesque walk? Of course you have!!! But despite the internet’s seemingly infinite knowledge all it has to offer is scattered blog posts, with printed maps that look like they haven’t been updated since before your very old man was born. We feel you mijn vriend, we feel you.
