@@ -2,6 +2,8 @@
 
 All backend code for WalkBaBa app
 
+WalkBaba is an app originally developed in just two weeks by KG, as a final project at Salt. Deployed link to follow!
+
 WalkBaBa Description:
 
 Ever been in a new and exciting city and thought I’d love to take in these new surroundings on a relaxed, charming and picturesque walk? Of course you have!!! But despite the internet’s seemingly infinite knowledge all it has to offer is scattered blog posts, with printed maps that look like they haven’t been updated since before your very old man was born. We feel you mijn vriend, we feel you.
