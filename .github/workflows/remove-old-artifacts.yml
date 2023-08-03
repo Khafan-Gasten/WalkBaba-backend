@@ -2,8 +2,8 @@ name: Remove old artifacts
 
 on:
   schedule:
-    # Every day at 11:35am UTC
-    - cron: '35 11 * * *'
+    # Every day at 11:45am UTC
+    - cron: '45 11 * * *'
 
 jobs:
   remove-old-artifacts:
@@ -17,4 +17,4 @@ jobs:
         age: '5 days' # '<number> <unit>', e.g. 5 days, 2 years, 90 seconds, parsed by Moment.js
         # Optional inputs
         # skip-tags: true
-        skip-recent: 5
+        skip-recent: 3
