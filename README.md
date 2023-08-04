@@ -7,6 +7,9 @@ WalkBaba is an app originally developed in just two weeks by KG, as a final proj
 
 Future Work:
 
+- Make the readMe nice
+  - Upload presentation diagram.
+- Make all API keys private.
 - Bug fixes.
 - Thread ChatGpt requests.
 - Add lots of major cities to the database.
