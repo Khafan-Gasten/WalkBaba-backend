@@ -4,6 +4,7 @@ All backend code for WalkBaBa app
 
 WalkBaba is an app originally developed in just two weeks by KG, as a final project at Salt. Deployed link to follow!
 
+https://github.com/Khafan-Gasten/WalkBaba-backend/assets/109215585/e52541dc-e694-4737-9885-36451d79e3de
 
 Future Work:
 
@@ -48,6 +49,10 @@ To Improve the app:
   - Updating DB.
   - Login page.
   - Authentification.
+
+https://github.com/Khafan-Gasten/WalkBaba-backend/assets/109215585/e52541dc-e694-4737-9885-36451d79e3de
+
+
 - Improve photo galleries LOW PRIORITY.
  
 
