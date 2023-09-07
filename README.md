@@ -6,6 +6,8 @@ WalkBaba is an app originally developed in just two weeks by KG, as a final proj
 
 https://github.com/Khafan-Gasten/WalkBaba-backend/assets/109215585/e52541dc-e694-4737-9885-36451d79e3de
 
+AI powered walks to explore your city!
+
 Future Work:
 
 To keep the app deployed: 
