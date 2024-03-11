@@ -9,6 +9,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.NoSuchElementException;
 
 public class GlobalErrorHandler {
+
+    // TODO: CartExceptionHandler is a terrible class name for this project
     @ControllerAdvice
     public static class CartExceptionHandler extends ResponseEntityExceptionHandler {
 
